@@ -23,14 +23,16 @@ public class TelaLogin extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         campoCpf.setBackground(new java.awt.Color(0, 173, 181));
+        campoCpf.setFont(new java.awt.Font("JetBrains Mono", 0, 18)); // NOI18N
         campoCpf.setForeground(new java.awt.Color(255, 255, 255));
         campoCpf.setBorder(null);
-        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 148, 280, 30));
+        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 160, 30));
 
         campoSenha.setBackground(new java.awt.Color(0, 173, 181));
+        campoSenha.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
         campoSenha.setForeground(new java.awt.Color(255, 255, 255));
         campoSenha.setBorder(null);
-        getContentPane().add(campoSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 280, 30));
+        getContentPane().add(campoSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 240, 160, 30));
 
         botaoEntrar.setBackground(new java.awt.Color(57, 62, 70));
         botaoEntrar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
