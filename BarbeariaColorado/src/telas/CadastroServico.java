@@ -37,7 +37,7 @@ public class CadastroServico extends javax.swing.JFrame {
         botaoExcluir = new javax.swing.JButton();
         botaoSalvar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelaServico = new javax.swing.JTable();
         cadastroServico = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -116,10 +116,10 @@ public class CadastroServico extends javax.swing.JFrame {
         botaoSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(botaoSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 650, 140, 30));
 
-        jTable1.setBackground(new java.awt.Color(238, 238, 238));
-        jTable1.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(57, 62, 70));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaServico.setBackground(new java.awt.Color(238, 238, 238));
+        tabelaServico.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
+        tabelaServico.setForeground(new java.awt.Color(57, 62, 70));
+        tabelaServico.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -138,7 +138,7 @@ public class CadastroServico extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelaServico);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, 710, 530));
 
@@ -206,6 +206,6 @@ public class CadastroServico extends javax.swing.JFrame {
     private javax.swing.JTextField campoPreco;
     private javax.swing.JTextField campoTipo;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabelaServico;
     // End of variables declaration//GEN-END:variables
 }
