@@ -8,12 +8,12 @@ package telas;
  *
  * @author Carlos
  */
-public class CadastroCliente extends javax.swing.JFrame {
+public class CadastroServico extends javax.swing.JFrame {
 
     /**
-     * Creates new form CadastroCliente
+     * Creates new form CadastroServico
      */
-    public CadastroCliente() {
+    public CadastroServico() {
         initComponents();
     }
 
@@ -27,21 +27,18 @@ public class CadastroCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         botaoVoltar = new javax.swing.JButton();
-        campoNome = new javax.swing.JTextField();
-        campoCpf = new javax.swing.JTextField();
+        campoTipo = new javax.swing.JTextField();
         botaoBuscar = new javax.swing.JButton();
-        campoEmail = new javax.swing.JTextField();
-        campoEndereco = new javax.swing.JTextField();
-        campoCelular = new javax.swing.JTextField();
-        campoDataNascimento = new javax.swing.JTextField();
+        campoDescricao = new javax.swing.JTextField();
+        campoPreco = new javax.swing.JTextField();
         botaoNovo = new javax.swing.JButton();
         botaoAlterar = new javax.swing.JButton();
         botaoPesquisar = new javax.swing.JButton();
         botaoExcluir = new javax.swing.JButton();
         botaoSalvar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelClientes = new javax.swing.JTable();
-        cadatroClientes = new javax.swing.JLabel();
+        jTable1 = new javax.swing.JTable();
+        cadastroServico = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -60,52 +57,29 @@ public class CadastroCliente extends javax.swing.JFrame {
         });
         getContentPane().add(botaoVoltar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 150, 40));
 
-        campoNome.setBackground(new java.awt.Color(238, 238, 238));
-        campoNome.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoNome.setForeground(new java.awt.Color(57, 62, 70));
-        campoNome.setBorder(null);
-        getContentPane().add(campoNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 290, 30));
-
-        campoCpf.setBackground(new java.awt.Color(238, 238, 238));
-        campoCpf.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoCpf.setForeground(new java.awt.Color(57, 62, 70));
-        campoCpf.setBorder(null);
-        campoCpf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoCpfActionPerformed(evt);
-            }
-        });
-        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 290, 30));
+        campoTipo.setBackground(new java.awt.Color(238, 238, 238));
+        campoTipo.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        campoTipo.setForeground(new java.awt.Color(57, 62, 70));
+        campoTipo.setBorder(null);
+        getContentPane().add(campoTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 280, 30));
 
         botaoBuscar.setBorder(null);
         botaoBuscar.setBorderPainted(false);
         botaoBuscar.setContentAreaFilled(false);
         botaoBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(botaoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 210, 80, 30));
+        getContentPane().add(botaoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 160, 80, 30));
 
-        campoEmail.setBackground(new java.awt.Color(238, 238, 238));
-        campoEmail.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoEmail.setForeground(new java.awt.Color(57, 62, 70));
-        campoEmail.setBorder(null);
-        getContentPane().add(campoEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 290, 30));
+        campoDescricao.setBackground(new java.awt.Color(238, 238, 238));
+        campoDescricao.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        campoDescricao.setForeground(new java.awt.Color(57, 62, 70));
+        campoDescricao.setBorder(null);
+        getContentPane().add(campoDescricao, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 280, 30));
 
-        campoEndereco.setBackground(new java.awt.Color(238, 238, 238));
-        campoEndereco.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoEndereco.setForeground(new java.awt.Color(57, 62, 70));
-        campoEndereco.setBorder(null);
-        getContentPane().add(campoEndereco, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 290, 30));
-
-        campoCelular.setBackground(new java.awt.Color(238, 238, 238));
-        campoCelular.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoCelular.setForeground(new java.awt.Color(57, 62, 70));
-        campoCelular.setBorder(null);
-        getContentPane().add(campoCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 290, 30));
-
-        campoDataNascimento.setBackground(new java.awt.Color(238, 238, 238));
-        campoDataNascimento.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoDataNascimento.setForeground(new java.awt.Color(57, 62, 70));
-        campoDataNascimento.setBorder(null);
-        getContentPane().add(campoDataNascimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 580, 290, 30));
+        campoPreco.setBackground(new java.awt.Color(238, 238, 238));
+        campoPreco.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
+        campoPreco.setForeground(new java.awt.Color(57, 62, 70));
+        campoPreco.setBorder(null);
+        getContentPane().add(campoPreco, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 280, 30));
 
         botaoNovo.setBorder(null);
         botaoNovo.setBorderPainted(false);
@@ -142,36 +116,35 @@ public class CadastroCliente extends javax.swing.JFrame {
         botaoSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         getContentPane().add(botaoSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 650, 140, 30));
 
-        tabelClientes.setBackground(new java.awt.Color(238, 238, 238));
-        tabelClientes.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
-        tabelClientes.setForeground(new java.awt.Color(57, 62, 70));
-        tabelClientes.setModel(new javax.swing.table.DefaultTableModel(
+        jTable1.setBackground(new java.awt.Color(238, 238, 238));
+        jTable1.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
+        jTable1.setForeground(new java.awt.Color(57, 62, 70));
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Nome", "CPF", "Email", "Endereço", "Celular", "Data de Nascimento"
+                "Tipo", "Descrição", "Preço"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        tabelClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        tabelClientes.setSelectionForeground(new java.awt.Color(34, 40, 49));
-        jScrollPane1.setViewportView(tabelClientes);
+        jScrollPane1.setViewportView(jTable1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 80, 770, 540));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, 710, 530));
 
-        cadatroClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/tela_cadastro_clientes.png"))); // NOI18N
-        getContentPane().add(cadatroClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        cadastroServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/tela_cadastro_servico.png"))); // NOI18N
+        cadastroServico.setToolTipText("");
+        getContentPane().add(cadastroServico, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         setSize(new java.awt.Dimension(1220, 700));
         setLocationRelativeTo(null);
@@ -184,10 +157,6 @@ public class CadastroCliente extends javax.swing.JFrame {
     private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
         dispose();
     }//GEN-LAST:event_botaoVoltarActionPerformed
-
-    private void campoCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCpfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoCpfActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,20 +175,20 @@ public class CadastroCliente extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroCliente().setVisible(true);
+                new CadastroServico().setVisible(true);
             }
         });
     }
@@ -232,14 +201,11 @@ public class CadastroCliente extends javax.swing.JFrame {
     private javax.swing.JButton botaoPesquisar;
     private javax.swing.JButton botaoSalvar;
     private javax.swing.JButton botaoVoltar;
-    private javax.swing.JLabel cadatroClientes;
-    private javax.swing.JTextField campoCelular;
-    private javax.swing.JTextField campoCpf;
-    private javax.swing.JTextField campoDataNascimento;
-    private javax.swing.JTextField campoEmail;
-    private javax.swing.JTextField campoEndereco;
-    private javax.swing.JTextField campoNome;
+    private javax.swing.JLabel cadastroServico;
+    private javax.swing.JTextField campoDescricao;
+    private javax.swing.JTextField campoPreco;
+    private javax.swing.JTextField campoTipo;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tabelClientes;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
