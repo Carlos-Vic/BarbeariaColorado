@@ -5,7 +5,6 @@ import java.util.*;
 
 public class Gerente extends Pessoa {
     private String senha;
-    public Gerente() {}
 
     public Gerente(String nome, String CPF, String email, String endereco, String celular, String senha) {
         super(nome, CPF, email, endereco, celular);
