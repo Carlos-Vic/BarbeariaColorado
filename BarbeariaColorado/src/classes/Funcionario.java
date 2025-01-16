@@ -117,7 +117,18 @@ public class Funcionario extends Pessoa {
         return "Atendimento de " + cliente.getNome() + " agendado para o dia " + dataAtendimento + " no valor de R$: " + servico.getPreco();
     }
 
-
-
+    public String cancelarAtendimento(ArrayList<Atendimento> atendimentos, Cliente cliente, Servico servico, LocalDate dataAtendimento) {
+        for (Atendimento atendimento : atendimentos) {
+            if (atendimento.getCliente().equals(cliente) &&
+                    atendimento.getServico().equals(servico) &&
+                    atendimento.getDataAtendimento().equals(dataAtendimento)) {
+                atendimentos.remove(atendimento);
+                return "Atendimento de " + cliente.getNome() + " no dia " + dataAtendimento + " foi cancelado com sucesso.";
+            }
+        }
+        return "Atendimento não encontrado para cancelamento.";
+    }
+    
 }
+
 
