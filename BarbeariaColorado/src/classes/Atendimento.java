@@ -1,5 +1,6 @@
 package classes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,11 +9,25 @@ public class Atendimento {
 
     private Cliente cliente;
     private Servico servico;
-    private Date dataAtendimento;
+    private LocalDate dataAtendimento;
     private List<Produto> produtosComprados; // Lista de produtos comprados
     private double totalPagamento;
 
-    public Atendimento(Cliente cliente, Servico servico, Date dataAtendimento, double totalPagamento) {
+    public Atendimento(Cliente cliente, Servico servico, LocalDate dataAtendimento) {
+        this.cliente = cliente;
+        this.servico = servico;
+        this.dataAtendimento = dataAtendimento;
+    }
+
+    
+    public Atendimento(Cliente cliente, Servico servico, LocalDate dataAtendimento, List<Produto> produtosComprados) {
+        this.cliente = cliente;
+        this.servico = servico;
+        this.dataAtendimento = dataAtendimento;
+        this.produtosComprados = produtosComprados;
+    }
+    
+    public Atendimento(Cliente cliente, Servico servico, LocalDate dataAtendimento, double totalPagamento) {
         this.cliente = cliente;
         this.servico = servico;
         this.dataAtendimento = dataAtendimento;
@@ -47,7 +62,7 @@ public class Atendimento {
         return servico;
     }
 
-    public Date getDataAtendimento() {
+    public LocalDate getDataAtendimento() {
         return dataAtendimento;
     }
 

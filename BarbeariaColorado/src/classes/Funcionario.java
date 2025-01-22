@@ -1,20 +1,63 @@
 package classes;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Funcionario extends Pessoa {
+
     private String cargo;
     private String senha;
-    public Funcionario () {}
+    private ArrayList<Agendamento> agendamentos; // adicionei um array de agendamentos
 
-    public Funcionario (String nome, String CPF, String email, String endereco, String celular, String cargo, String senha) {
+    public Funcionario(String nome, String CPF, String email, String endereco, String celular, String cargo, String senha) {
         super(nome, CPF, email, endereco, celular);
         this.cargo = cargo;
         this.senha = senha;
+        this.agendamentos = new ArrayList<>(); // inicia com um array vazio dos agendamentos
 
     }
+
+    // Adicioneis esses métodos pra classe Agendamento funcionar
+    
+
+    // Método para a verificação de disponibilidade do funcionario
+    public boolean verificarDisponibilidade(LocalDate data, LocalTime horaInicio, LocalTime horaFim) {
+        for (Agendamento agendamento : agendamentos) {
+            // Verifica se há conflito de horário
+            if (agendamento.getData().equals(data)
+                    && (agendamento.getHoraInicio().isBefore(horaFim) && agendamento.getHoraFim().isAfter(horaInicio))) {
+                System.out.println("Conflito de horário encontrado!");
+                return false;  // Se o horário de algum agendamento sobrepõe o novo, retorna falso
+            }
+        }
+        return true;  // Caso o funcionário esteja disponível
+    }
+
+    // Método para adicionar um agendamento a agenda do funcionario
+    public void adicionarAgendamento(Agendamento agendamento) {
+        agendamentos.add(agendamento);
+    }
+
+    // Método para garantir que o agendamento só seja cancelado se estiver confirmado
+    public void removerAgendamento(Agendamento agendamento) {
+        if (agendamento.isConfirmado()) {
+            agendamentos.remove(agendamento);
+            System.out.println("Agendamento cancelado com sucesso.");
+        } else {
+            System.out.println("Este agendamento não está confirmado e não pode ser cancelado.");
+        }
+    }
+    
+
+        // Fim dos métodos adicionados
+
+
+
+
+
+
     public String cadastrarCliente(ArrayList<Cliente> clientes, Cliente novoCliente) {
         if (novoCliente == null) {
             return "Cliente inválido.";
@@ -99,16 +142,17 @@ public class Funcionario extends Pessoa {
                     System.out.println("Voltando ao menu principal...");
                     return "Edição concluída!";
                 }
-                default -> System.out.println("Opção inválida. Tente novamente.");
+                default ->
+                    System.out.println("Opção inválida. Tente novamente.");
             }
         }
     }
 
     public String agendarAtendimento(ArrayList<Atendimento> atendimentos, Cliente cliente, Servico servico, LocalDate dataAtendimento) {
         for (Atendimento atendimento : atendimentos) {
-            if (atendimento.getCliente().equals(cliente) &&
-                    atendimento.getServico().equals(servico) &&
-                    atendimento.getDataAtendimento().equals(dataAtendimento)) {
+            if (atendimento.getCliente().equals(cliente)
+                    && atendimento.getServico().equals(servico)
+                    && atendimento.getDataAtendimento().equals(dataAtendimento)) {
                 return "Atendimento já cadastrado.";
             }
         }
@@ -119,16 +163,14 @@ public class Funcionario extends Pessoa {
 
     public String cancelarAtendimento(ArrayList<Atendimento> atendimentos, Cliente cliente, Servico servico, LocalDate dataAtendimento) {
         for (Atendimento atendimento : atendimentos) {
-            if (atendimento.getCliente().equals(cliente) &&
-                    atendimento.getServico().equals(servico) &&
-                    atendimento.getDataAtendimento().equals(dataAtendimento)) {
+            if (atendimento.getCliente().equals(cliente)
+                    && atendimento.getServico().equals(servico)
+                    && atendimento.getDataAtendimento().equals(dataAtendimento)) {
                 atendimentos.remove(atendimento);
                 return "Atendimento de " + cliente.getNome() + " no dia " + dataAtendimento + " foi cancelado com sucesso.";
             }
         }
         return "Atendimento não encontrado para cancelamento.";
     }
-    
+
 }
-
-
