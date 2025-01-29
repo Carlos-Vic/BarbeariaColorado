@@ -76,6 +76,11 @@ public class CadastroProduto extends javax.swing.JFrame {
         botaoBuscar.setBorderPainted(false);
         botaoBuscar.setContentAreaFilled(false);
         botaoBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoBuscarActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 160, 70, 30));
 
         campoNome.setBackground(new java.awt.Color(238, 238, 238));
@@ -111,6 +116,11 @@ public class CadastroProduto extends javax.swing.JFrame {
         botaoAlterar.setBorderPainted(false);
         botaoAlterar.setContentAreaFilled(false);
         botaoAlterar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAlterarActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoAlterar, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 650, 140, 30));
 
         botaoPesquisar.setBorder(null);
@@ -128,6 +138,11 @@ public class CadastroProduto extends javax.swing.JFrame {
         botaoExcluir.setBorderPainted(false);
         botaoExcluir.setContentAreaFilled(false);
         botaoExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoExcluirActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 650, 150, 30));
 
         botaoSalvar.setBorder(null);
@@ -184,13 +199,13 @@ public class CadastroProduto extends javax.swing.JFrame {
         int quantidade = Integer.parseInt(campoQuantidade.getText());
         String nome = campoNome.getText();
         double preco = Double.parseDouble(campoPreco.getText());
-        Produto produto = new Produto(codigo, quantidade, nome, preco);
+        Produto produto = new Produto(codigo, nome, preco, quantidade);
         System.out.println("cadastro de " + produto.getNome());
         modeloTabela.addRow(new Object[]{
         produto.getCodigo(),
-        produto.getQuantidade(),
         produto.getNome(),
         produto.getPreco(),
+        produto.getQuantidade(),
 
     });
         Produtos.add(produto);
@@ -198,6 +213,89 @@ public class CadastroProduto extends javax.swing.JFrame {
         
                 
     }                                         
+
+    private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+        try {
+            int produtoBuscado = Integer.parseInt(campoCodigo.getText());
+            boolean produtoEncontrado = false;
+        
+        for (Produto produto : Produtos) {
+            if (produto.getCodigo() == produtoBuscado) {
+                System.out.println(produto);
+                limparCampos();
+                produtoEncontrado = true;
+                break;
+            }
+        }
+        
+        if (!produtoEncontrado) {
+            System.out.println("Produto não encontrado.");
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("Digite um código de produto válido.");
+        }   
+
+    }                                           
+
+    private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
+        int selectedRow = tabelaProduto.getSelectedRow();
+        System.out.println("Linha selecionada: " + selectedRow);
+        if (selectedRow >= 0 && selectedRow < Produtos.size()) {
+            // Remover a linha da tabela primeiro
+            modeloTabela.removeRow(selectedRow);
+            Produtos.remove(selectedRow);
+            System.out.println("Produto excluido com sucesso.");
+        } else {
+            System.out.println("Selecione um produto valido para excluir.");
+        }
+    }                                            
+
+    private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
+        int selectedRow = tabelaProduto.getSelectedRow();
+        
+        if (selectedRow >= 0 && selectedRow < Produtos.size()) {
+            Produto produto = Produtos.get(selectedRow);
+            
+            // Verifica o campo a ser alterado e muda
+        if (!campoCodigo.getText().isEmpty() && !campoCodigo.getText().equals(produto.getCodigo())) {
+            produto.setCodigo(Integer.parseInt(campoCodigo.getText()));
+            modeloTabela.setValueAt(produto.getCodigo(), selectedRow, 0);  // Atualiza o código na tabela
+            System.out.println("Código alterado com sucesso");
+            limparCampos();
+        }
+        if (!campoNome.getText().isEmpty() && !campoNome.getText().equals(produto.getNome())) {
+            produto.setNome(campoNome.getText());
+            modeloTabela.setValueAt(produto.getNome(), selectedRow, 1);  // Atualiza o nome na tabela
+            System.out.println("Nome alterado com sucesso");
+            limparCampos();
+        }
+        if (!campoPreco.getText().isEmpty() && !campoPreco.getText().equals(produto.getPreco())) {
+            produto.setPreco(Double.parseDouble(campoPreco.getText()));
+            modeloTabela.setValueAt(produto.getPreco(), selectedRow, 2);  // Atualiza o preço na tabela
+            System.out.println("Preço alterado com sucesso");
+            limparCampos();
+        }
+        if (!campoQuantidade.getText().isEmpty() && !campoQuantidade.getText().equals(produto.getQuantidade())) {
+            produto.setQuantidade(Integer.parseInt(campoQuantidade.getText()));
+            modeloTabela.setValueAt(produto.getQuantidade(), selectedRow, 3);  // Atualiza a quantidade na tabela
+            System.out.println("Quantidade alterada com sucesso");
+            limparCampos();
+        }
+
+        // Atualiza o objeto na lista
+        Produtos.set(selectedRow, produto);
+
+        // Atualiza a tabela
+        modeloTabela.fireTableDataChanged();
+
+        System.out.println("Todos os dados do produto foram atualizados com sucesso!");
+        
+        }
+        
+    }                                            
 
     /**
      * @param args the command line arguments
