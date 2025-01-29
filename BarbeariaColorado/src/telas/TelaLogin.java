@@ -1,14 +1,20 @@
 package telas;
+import classes.*;
+import java.util.ArrayList;
 
 public class TelaLogin extends javax.swing.JFrame {
 
+    static String senhaGerente = "admin";
+    static String cpfGerente = "05525120100";
+    
+
 
     public TelaLogin() {
-        initComponents();
+        initComponents();        
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         campoCpf = new javax.swing.JTextField();
@@ -26,7 +32,7 @@ public class TelaLogin extends javax.swing.JFrame {
         campoCpf.setFont(new java.awt.Font("JetBrains Mono", 0, 18)); // NOI18N
         campoCpf.setForeground(new java.awt.Color(255, 255, 255));
         campoCpf.setBorder(null);
-        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 160, 30));
+        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 140, 250, 30));
 
         campoSenha.setBackground(new java.awt.Color(0, 173, 181));
         campoSenha.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
@@ -42,6 +48,11 @@ public class TelaLogin extends javax.swing.JFrame {
         botaoEntrar.setContentAreaFilled(false);
         botaoEntrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoEntrar.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        botaoEntrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEntrarActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 323, 270, 30));
 
         botaoSair.setBackground(new java.awt.Color(57, 62, 70));
@@ -62,14 +73,24 @@ public class TelaLogin extends javax.swing.JFrame {
 
         setSize(new java.awt.Dimension(701, 501));
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
-    private void botaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSairActionPerformed
+    private void botaoSairActionPerformed(java.awt.event.ActionEvent evt) {                                          
         dispose();
-    }//GEN-LAST:event_botaoSairActionPerformed
+    }                                         
+
+    private void botaoEntrarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+        if (campoCpf.getText().equals(cpfGerente) && campoSenha.getText().equals(senhaGerente)) {
+            MenuGerente menuGerente = new MenuGerente();
+            menuGerente.setVisible(true);
+            this.dispose();
+        } else {
+            System.out.println("Cpf ou senha incorretos.");
+        }
+    }                                           
 
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -101,11 +122,11 @@ public class TelaLogin extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JButton botaoEntrar;
     private javax.swing.JButton botaoSair;
     private javax.swing.JTextField campoCpf;
     private javax.swing.JPasswordField campoSenha;
     private javax.swing.JLabel telaLogin;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
