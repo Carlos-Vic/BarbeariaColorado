@@ -3,14 +3,15 @@ package telas;
 import classes.Cliente;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class CadastroCliente extends javax.swing.JFrame {
-    
+
     static ArrayList<Cliente> Clientes;
-    
+
     String botao;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -19,7 +20,7 @@ public class CadastroCliente extends javax.swing.JFrame {
      */
     public CadastroCliente() {
         initComponents();
-        
+
         Clientes = new ArrayList();
 
         //Habilitar os botões
@@ -27,6 +28,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         botaoBuscar.setEnabled(false);
         botaoNovo.setEnabled(true);
         botaoAlterar.setEnabled(false);
+        botaoPesquisar.setEnabled(true);
         botaoExcluir.setEnabled(false);
         botaoSalvar.setEnabled(false);
 
@@ -37,14 +39,14 @@ public class CadastroCliente extends javax.swing.JFrame {
         campoEndereco.setEnabled(false);
         campoCelular.setEnabled(false);
         campoDataNascimento.setEnabled(false);
-        
+
     }
 
     // Carregar a tabela com clientes da lista
     public void carregarTabelaClientes() {
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Nome",
             "CPF", "Email", "Endereço", "Celular", "Data de Nascimento"}, 0);
-        
+
         for (int i = 0; i < Clientes.size(); i++) {
             Object linha[] = new Object[]{
                 Clientes.get(i).getNome(),
@@ -53,12 +55,12 @@ public class CadastroCliente extends javax.swing.JFrame {
                 Clientes.get(i).getEndereco(),
                 Clientes.get(i).getCelular(),
                 Clientes.get(i).getDataAniversario().format(formatter)};
-            
+
             modelo.addRow(linha);
         }
-        
+
         tabelaClientes.setModel(modelo);
-        
+
         tabelaClientes.getColumnModel().getColumn(0).setPreferredWidth(20);
         tabelaClientes.getColumnModel().getColumn(1).setPreferredWidth(20);
         tabelaClientes.getColumnModel().getColumn(2).setPreferredWidth(20);
@@ -66,7 +68,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         tabelaClientes.getColumnModel().getColumn(4).setPreferredWidth(20);
         tabelaClientes.getColumnModel().getColumn(5).setPreferredWidth(20);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -260,12 +262,12 @@ public class CadastroCliente extends javax.swing.JFrame {
         if (campoCpf.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "O CPF deve ser informado!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
         } else {
-            Cliente cl;         
+            Cliente cl;
             String nome = "", cpf = "", email = "", endereco = "", celular = "", dataNascimento = "";
-            
+
             for (int i = 0; i < Clientes.size(); i++) {
                 cl = Clientes.get(i);
-                
+
                 if (campoCpf.getText().equals(cl.getCPF())) {
                     nome = cl.getNome();
                     cpf = cl.getCPF();
@@ -273,10 +275,10 @@ public class CadastroCliente extends javax.swing.JFrame {
                     endereco = cl.getEndereco();
                     celular = cl.getCelular();
                     dataNascimento = String.valueOf(cl.getDataAniversario().format(formatter));
-                    
+
                 }
             }
-            
+
             if (cpf.equals("")) {
                 JOptionPane.showMessageDialog(null, "Este cliente não existe!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
                 campoNome.setText("");
@@ -293,11 +295,11 @@ public class CadastroCliente extends javax.swing.JFrame {
                 campoCelular.setText(celular);
                 campoDataNascimento.setText(dataNascimento);
             }
-            
+
             campoNome.selectAll();
             campoNome.requestFocus();
         }
-        
+
 
     }//GEN-LAST:event_botaoBuscarActionPerformed
 
@@ -327,13 +329,13 @@ public class CadastroCliente extends javax.swing.JFrame {
         campoEndereco.setEnabled(true);
         campoCelular.setEnabled(true);
         campoDataNascimento.setEnabled(true);
-        
+
         campoNome.requestFocus();
     }//GEN-LAST:event_botaoNovoActionPerformed
 
     private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaClientesMouseClicked
         int i = tabelaClientes.getSelectedRow();
-        
+
         if (i >= 0 && i < Clientes.size()) {
             Cliente cl = Clientes.get(i);
             campoNome.setText(cl.getNome());
@@ -380,43 +382,55 @@ public class CadastroCliente extends javax.swing.JFrame {
         campoEndereco.setEnabled(true);
         campoCelular.setEnabled(true);
         campoDataNascimento.setEnabled(true);
-        
+
         campoNome.requestFocus();
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
         int index = tabelaClientes.getSelectedRow();
-        
+
         if (index >= 0 && index < Clientes.size()) {
-            
-            Clientes.remove(index);
+            int confirmacao = JOptionPane.showConfirmDialog(
+                    null,
+                    "Tem certeza de que deseja excluir este cliente?",
+                    "Confirmação",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                Clientes.remove(index);
+                carregarTabelaClientes();
+
+                // Limpar os campos
+                campoNome.setText("");
+                campoCpf.setText("");
+                campoEmail.setText("");
+                campoEndereco.setText("");
+                campoCelular.setText("");
+                campoDataNascimento.setText("");
+
+                // Habilitar ou desabilitar os botões
+                botaoVoltar.setEnabled(true);
+                botaoBuscar.setEnabled(true);
+                botaoNovo.setEnabled(true);
+                botaoAlterar.setEnabled(false);
+                botaoExcluir.setEnabled(false);
+                botaoSalvar.setEnabled(true);
+
+                // Desabilitar os campos de texto
+                campoNome.setEnabled(false);
+                campoCpf.setEnabled(false);
+                campoEmail.setEnabled(false);
+                campoEndereco.setEnabled(false);
+                campoCelular.setEnabled(false);
+                campoDataNascimento.setEnabled(false);
+                
+                JOptionPane.showMessageDialog(null, "Cliente excluído", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
-        
-        carregarTabelaClientes();
-
-        //Limpar os campos
-        campoNome.setText("");
-        campoCpf.setText("");
-        campoEmail.setText("");
-        campoEndereco.setText("");
-        campoCelular.setText("");
-        campoDataNascimento.setText("");
-
-        //Habilitar ou desabilitar os botoes
-        botaoVoltar.setEnabled(true);
-        botaoBuscar.setEnabled(true);
-        botaoNovo.setEnabled(true);
-        botaoAlterar.setEnabled(false);
-        botaoExcluir.setEnabled(false);
-        botaoSalvar.setEnabled(true);
-
-        // Habilitar os campos de texto
-        campoNome.setEnabled(false);
-        campoCpf.setEnabled(false);
-        campoEmail.setEnabled(false);
-        campoEndereco.setEnabled(false);
-        campoCelular.setEnabled(false);
-        campoDataNascimento.setEnabled(false);
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
@@ -428,28 +442,57 @@ public class CadastroCliente extends javax.swing.JFrame {
         } else {
             String nome = campoNome.getText(), cpf = campoCpf.getText(), email = campoEmail.getText(),
                     endereco = campoEndereco.getText(), celular = campoCelular.getText();
-            
-            LocalDate dataNascimento = LocalDate.parse(campoDataNascimento.getText(), formatter);
-            
-            if (botao.equals("novo")) {
-                Cliente cliente = new Cliente(nome, cpf, email, endereco, celular, dataNascimento);
-                
-                Clientes.add(cliente);
-                
-            } else if (botao.equals("alterar")) {
-                int index = tabelaClientes.getSelectedRow();
-                
-                Clientes.get(index).setNome(nome);
-                Clientes.get(index).setCPF(cpf);
-                Clientes.get(index).setEmail(email);
-                Clientes.get(index).setEndereco(endereco);
-                Clientes.get(index).setCelular(celular);
-                Clientes.get(index).setDataAniversario(dataNascimento);
+
+            LocalDate dataNascimento;
+            try {
+                dataNascimento = LocalDate.parse(campoDataNascimento.getText(), formatter);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(null, "Data inválida! Insira no formato dd/MM/yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
+                campoDataNascimento.requestFocus();
+                return;
             }
-            
+
+            int confirmacao;
+            if (botao.equals("novo")) {
+                confirmacao = JOptionPane.showConfirmDialog(
+                        null,
+                        "Tem certeza de que deseja cadastrar este cliente?",
+                        "Confirmação",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (confirmacao == JOptionPane.YES_OPTION) {
+                    Cliente cliente = new Cliente(nome, cpf, email, endereco, celular, dataNascimento);
+                    Clientes.add(cliente);
+                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                }
+            } else if (botao.equals("alterar")) {
+                confirmacao = JOptionPane.showConfirmDialog(
+                        null,
+                        "Tem certeza de que deseja alterar os dados deste cliente?",
+                        "Confirmação",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (confirmacao == JOptionPane.YES_OPTION) {
+                    int index = tabelaClientes.getSelectedRow();
+
+                    Clientes.get(index).setNome(nome);
+                    Clientes.get(index).setCPF(cpf);
+                    Clientes.get(index).setEmail(email);
+                    Clientes.get(index).setEndereco(endereco);
+                    Clientes.get(index).setCelular(celular);
+                    Clientes.get(index).setDataAniversario(dataNascimento);
+                    
+                    JOptionPane.showMessageDialog(null, "Dados do cliente alterados com sucesso", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+
             carregarTabelaClientes();
 
-            //Limpar os campos
+            // Limpar os campos
             campoNome.setText("");
             campoCpf.setText("");
             campoEmail.setText("");
@@ -457,7 +500,7 @@ public class CadastroCliente extends javax.swing.JFrame {
             campoCelular.setText("");
             campoDataNascimento.setText("");
 
-            //Habilitar ou desabilitar os botoes
+            // Habilitar ou desabilitar os botões
             botaoVoltar.setEnabled(true);
             botaoBuscar.setEnabled(false);
             botaoNovo.setEnabled(true);
@@ -465,7 +508,7 @@ public class CadastroCliente extends javax.swing.JFrame {
             botaoExcluir.setEnabled(false);
             botaoSalvar.setEnabled(false);
 
-            // Habilitar os campos de texto
+            // Desabilitar os campos de texto
             campoNome.setEnabled(false);
             campoCpf.setEnabled(false);
             campoEmail.setEnabled(false);
@@ -502,7 +545,7 @@ public class CadastroCliente extends javax.swing.JFrame {
             campoEndereco.setEnabled(false);
             campoCelular.setEnabled(false);
             campoDataNascimento.setEnabled(false);
-            
+
             campoCpf.requestFocus();
         }
     }//GEN-LAST:event_botaoPesquisarActionPerformed
