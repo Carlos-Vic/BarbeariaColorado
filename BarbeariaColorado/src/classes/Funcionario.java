@@ -19,9 +19,31 @@ public class Funcionario extends Pessoa {
 
     }
 
-    // Adicioneis esses métodos pra classe Agendamento funcionar
-    
+    public String getCargo() {
+        return cargo;
+    }
 
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public ArrayList<Agendamento> getAgendamentos() {
+        return agendamentos;
+    }
+
+    public void setAgendamentos(ArrayList<Agendamento> agendamentos) {
+        this.agendamentos = agendamentos;
+    }
+
+    // Adicioneis esses métodos pra classe Agendamento funcionar
     // Método para a verificação de disponibilidade do funcionario
     public boolean verificarDisponibilidade(LocalDate data, LocalTime horaInicio, LocalTime horaFim) {
         for (Agendamento agendamento : agendamentos) {
@@ -49,15 +71,8 @@ public class Funcionario extends Pessoa {
             System.out.println("Este agendamento não está confirmado e não pode ser cancelado.");
         }
     }
-    
 
-        // Fim dos métodos adicionados
-
-
-
-
-
-
+    // Fim dos métodos adicionados
     public String cadastrarCliente(ArrayList<Cliente> clientes, Cliente novoCliente) {
         if (novoCliente == null) {
             return "Cliente inválido.";

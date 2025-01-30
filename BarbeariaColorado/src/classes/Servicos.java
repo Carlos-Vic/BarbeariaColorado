@@ -1,3 +1,5 @@
+package classes;
+
 public class Servicos {
     public enum TipoServico {
         CORTE_SOCIAL("Corte Social", 50, "30 min"),
