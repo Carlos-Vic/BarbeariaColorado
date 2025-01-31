@@ -1,3 +1,4 @@
+
 package telas;
 
 import classes.Funcionario;
@@ -8,7 +9,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
-
 public class CadastroFuncionario extends javax.swing.JFrame {
     static ArrayList<Funcionario> Funcionarios;
     String botao;
@@ -16,6 +16,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     private int linhaSelecionada = -1;
     private final Font fontePadrao = new Font("JetBrains Mono", Font.PLAIN, 14); // variavel para setar fontes nos campos formatados
     private final Font fonteTabela = new Font("JetBrains Mono", Font.PLAIN, 12); // variavel para setar fontes nos campos formatados
+
 
     public CadastroFuncionario() {
         initComponents();
@@ -30,7 +31,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         campoCargo.setFont(fontePadrao);
         campoSenha.setFont(fontePadrao);
         tabelaFuncionarios.setFont(fonteTabela);
-        
+
         // Habilitar os botões
         configurarBotoes(true, true, false, true, false, false);
         // Desabilitando os campos
@@ -71,10 +72,10 @@ public class CadastroFuncionario extends javax.swing.JFrame {
             }
     
         });
-                        
+
     }
-    
-    public void carregarTabelaFuncionarios() {
+        
+        public void carregarTabelaFuncionarios() {
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Nome", "CPF", "Email", "Endereço", "Celular", "Cargo", "Senha"}, 0);
         
         for (Funcionario funcionario : Funcionarios) {
@@ -149,7 +150,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         campoCargo.setText("");
         campoSenha.setText("");
     }
-    
+
     // Método para habilitar/desabilitar campos e botões
     private void configurarBotoes(boolean voltar, boolean novo, boolean alterar, boolean pesquisar, boolean excluir, boolean salvar) {
         botaoVoltar.setEnabled(voltar);
@@ -159,7 +160,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         botaoExcluir.setEnabled(excluir);
         botaoSalvar.setEnabled(salvar);
     }
-    
+     
     // Método para habilitar/desabilitar campos de texto
     private void configurarCampos(boolean nome, boolean cpf, boolean email, boolean endereco, boolean celular, boolean cargo, boolean senha) {
         campoNome.setEnabled(nome);
@@ -175,7 +176,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     private void configurarModoNovo() {
         botao = "novo";
         limparCampos();
-        configurarCampos(true, true, true, true, true, true, true); // Todos os campos habilitados
+        configurarCampos(true, true, true, true, true, true,true); // Todos os campos habilitados
         configurarBotoes(true, true, false, true, false, true);
         buscaDinamicaAtiva = false; // Desativa a busca dinâmica
         campoNome.requestFocus();
@@ -190,7 +191,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         campoNome.requestFocus();
     }
     
-    // Método para configurar a interface para o modo de pesquisa
+     // Método para configurar a interface para o modo de pesquisa
     private void configurarModoPesquisa() {
         limparCampos();
         configurarCampos(true, true, false, false, false, false,false); // Nome e CPF habilitado
@@ -199,7 +200,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         campoNome.requestFocus();
     }
     
-    // Método para configurar a interface para o modo de salvar
+     // Método para configurar a interface para o modo de salvar
     private void configurarModoSalvar() {
         carregarTabelaFuncionarios();
         limparCampos();
@@ -209,7 +210,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         campoCpf.requestFocus();
     }
     
-    // Método para configurar a interface para o modo de excluir
+     // Método para configurar a interface para o modo de excluir
     private void configurarModoExcluir() {
         carregarTabelaFuncionarios();
         limparCampos();
@@ -217,17 +218,13 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         configurarBotoes(true, true, false, false, false, true);
         buscaDinamicaAtiva = false;
     }
-
-
-
+  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        botaoVoltar = new javax.swing.JButton();
         campoNome = new javax.swing.JTextField();
         campoCpf = new javax.swing.JTextField();
-        botaoBuscar = new javax.swing.JButton();
         campoEmail = new javax.swing.JTextField();
         campoEndereco = new javax.swing.JTextField();
         campoCelular = new javax.swing.JTextField();
@@ -236,6 +233,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         botaoNovo = new javax.swing.JButton();
         botaoAlterar = new javax.swing.JButton();
         botaoPesquisar = new javax.swing.JButton();
+        botaoVoltar = new javax.swing.JButton();
         botaoExcluir = new javax.swing.JButton();
         botaoSalvar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -243,71 +241,29 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         cadastroFuncionario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
-        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        botaoVoltar.setBackground(new java.awt.Color(57, 62, 70));
-        botaoVoltar.setBorder(null);
-        botaoVoltar.setBorderPainted(false);
-        botaoVoltar.setContentAreaFilled(false);
-        botaoVoltar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        botaoVoltar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoVoltarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(botaoVoltar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 150, 40));
-
-        campoNome.setBackground(new java.awt.Color(238, 238, 238));
-        campoNome.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoNome.setForeground(new java.awt.Color(57, 62, 70));
+        campoNome.setForeground(new java.awt.Color(255, 255, 255));
         campoNome.setBorder(null);
         getContentPane().add(campoNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 290, 30));
 
-        campoCpf.setBackground(new java.awt.Color(238, 238, 238));
-        campoCpf.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoCpf.setForeground(new java.awt.Color(57, 62, 70));
+        campoCpf.setForeground(new java.awt.Color(255, 255, 255));
         campoCpf.setBorder(null);
-        campoCpf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoCpfActionPerformed(evt);
-            }
-        });
         getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 290, 30));
 
-        botaoBuscar.setBorder(null);
-        botaoBuscar.setBorderPainted(false);
-        botaoBuscar.setContentAreaFilled(false);
-        botaoBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoBuscarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(botaoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 200, 70, 30));
-
-        campoEmail.setBackground(new java.awt.Color(238, 238, 238));
-        campoEmail.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoEmail.setForeground(new java.awt.Color(57, 62, 70));
+        campoEmail.setForeground(new java.awt.Color(255, 255, 255));
         campoEmail.setBorder(null);
         getContentPane().add(campoEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 290, 30));
 
-        campoEndereco.setBackground(new java.awt.Color(238, 238, 238));
-        campoEndereco.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoEndereco.setForeground(new java.awt.Color(57, 62, 70));
+        campoEndereco.setForeground(new java.awt.Color(255, 255, 255));
         campoEndereco.setBorder(null);
         getContentPane().add(campoEndereco, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 290, 30));
 
-        campoCelular.setBackground(new java.awt.Color(238, 238, 238));
-        campoCelular.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoCelular.setForeground(new java.awt.Color(57, 62, 70));
+        campoCelular.setForeground(new java.awt.Color(255, 255, 255));
         campoCelular.setBorder(null);
-        getContentPane().add(campoCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, 290, 30));
+        getContentPane().add(campoCelular, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 442, 290, 30));
 
-        campoCargo.setBackground(new java.awt.Color(238, 238, 238));
-        campoCargo.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoCargo.setForeground(new java.awt.Color(57, 62, 70));
+        campoCargo.setForeground(new java.awt.Color(255, 255, 255));
         campoCargo.setBorder(null);
         campoCargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -316,14 +272,12 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         });
         getContentPane().add(campoCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 520, 290, 30));
 
-        campoSenha.setBackground(new java.awt.Color(238, 238, 238));
-        campoSenha.setFont(new java.awt.Font("JetBrains Mono", 0, 16)); // NOI18N
-        campoSenha.setForeground(new java.awt.Color(57, 62, 70));
+        campoSenha.setForeground(new java.awt.Color(255, 255, 255));
         campoSenha.setBorder(null);
-        getContentPane().add(campoSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 600, 290, 30));
+        campoSenha.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(campoSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 600, 270, 30));
 
         botaoNovo.setBorder(null);
-        botaoNovo.setBorderPainted(false);
         botaoNovo.setContentAreaFilled(false);
         botaoNovo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -331,10 +285,9 @@ public class CadastroFuncionario extends javax.swing.JFrame {
                 botaoNovoActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoNovo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, 140, 30));
+        getContentPane().add(botaoNovo, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 650, 120, 30));
 
         botaoAlterar.setBorder(null);
-        botaoAlterar.setBorderPainted(false);
         botaoAlterar.setContentAreaFilled(false);
         botaoAlterar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
@@ -342,10 +295,9 @@ public class CadastroFuncionario extends javax.swing.JFrame {
                 botaoAlterarActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoAlterar, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 650, 140, 30));
+        getContentPane().add(botaoAlterar, new org.netbeans.lib.awtextra.AbsoluteConstraints(522, 650, 130, 30));
 
         botaoPesquisar.setBorder(null);
-        botaoPesquisar.setBorderPainted(false);
         botaoPesquisar.setContentAreaFilled(false);
         botaoPesquisar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoPesquisar.addActionListener(new java.awt.event.ActionListener() {
@@ -353,10 +305,19 @@ public class CadastroFuncionario extends javax.swing.JFrame {
                 botaoPesquisarActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 650, 150, 30));
+        getContentPane().add(botaoPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 650, 130, 30));
+
+        botaoVoltar.setBorder(null);
+        botaoVoltar.setContentAreaFilled(false);
+        botaoVoltar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVoltarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(botaoVoltar, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 20, 130, 30));
 
         botaoExcluir.setBorder(null);
-        botaoExcluir.setBorderPainted(false);
         botaoExcluir.setContentAreaFilled(false);
         botaoExcluir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoExcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -364,10 +325,9 @@ public class CadastroFuncionario extends javax.swing.JFrame {
                 botaoExcluirActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 650, 150, 30));
+        getContentPane().add(botaoExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(885, 653, 120, 30));
 
         botaoSalvar.setBorder(null);
-        botaoSalvar.setBorderPainted(false);
         botaoSalvar.setContentAreaFilled(false);
         botaoSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -375,10 +335,11 @@ public class CadastroFuncionario extends javax.swing.JFrame {
                 botaoSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 650, 140, 30));
+        getContentPane().add(botaoSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1055, 653, 130, 30));
 
         tabelaFuncionarios.setBackground(new java.awt.Color(238, 238, 238));
         tabelaFuncionarios.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
+        tabelaFuncionarios.setForeground(new java.awt.Color(57, 62, 70));
         tabelaFuncionarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -391,45 +352,77 @@ public class CadastroFuncionario extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+        tabelaFuncionarios.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tabelaFuncionarios.setSelectionForeground(new java.awt.Color(34, 40, 49));
         tabelaFuncionarios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tabelaFuncionarios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tabelaFuncionarios.setSelectionMode();
+        tabelaFuncionarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaFuncionariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaFuncionarios);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 70, 750, 560));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 770, 560));
 
         cadastroFuncionario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/tela_cadastro_funcionarios.png"))); // NOI18N
-        getContentPane().add(cadastroFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(cadastroFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1229, -1));
 
-        setSize(new java.awt.Dimension(1220, 700));
-        setLocationRelativeTo(null);
+        pack();
     }// </editor-fold>                        
-    
-    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        this.setVisible(false);
-    }                                           
 
-    private void campoCpfActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void tabelaFuncionariosMouseClicked(java.awt.event.MouseEvent evt) {                                                
+        linhaSelecionada = tabelaFuncionarios.getSelectedRow(); // Salva a linha selecionada
+
+        if (linhaSelecionada >= 0) {
+            DefaultTableModel modelo = (DefaultTableModel) tabelaFuncionarios.getModel();
+
+            // Obtém os valores da linha selecionada na tabela (nome, cpf, etc.)
+            String nome = (String) modelo.getValueAt(linhaSelecionada, 0);
+            String cpf = (String) modelo.getValueAt(linhaSelecionada, 1); 
+            String email = (String) modelo.getValueAt(linhaSelecionada, 2);
+            String endereco = (String) modelo.getValueAt(linhaSelecionada, 3);
+            String celular = (String) modelo.getValueAt(linhaSelecionada, 4);
+            String cargo = (String) modelo.getValueAt(linhaSelecionada, 5);
+            String senha = (String) modelo.getValueAt(linhaSelecionada, 6);
+
+
+            // Preenche os campos com os dados da linha clicada
+            campoNome.setText(nome);
+            campoCpf.setText(cpf);
+            campoEmail.setText(email);
+            campoEndereco.setText(endereco);
+            campoCelular.setValue(celular); // Usa setValue() para definir o valor do celular
+            campoCargo.setText(cargo);
+            campoSenha.setText(senha);
+
+        }
+
+        // Habilita/desabilita botões e campos conforme necessário
+        configurarBotoes(true, true, true, true, true, false);
+        configurarCampos(false, false, false, false, false, false,false);
+    }                                               
+
+    private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {                                          
         // TODO add your handling code here:
-    }                                        
+        configurarModoNovo();
+    }                                         
 
     private void campoCargoActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
     }                                          
 
-    private void botaoPesquisarActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
-    }                                              
-
-    private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        configurarModoNovo();                       
-    }                                         
+        this.setVisible(false);
+    }                                           
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {                                            
          if (campoNome.getText().equals("") || campoCpf.getText().equals("") || campoEmail.getText().equals("")
@@ -493,9 +486,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
             }
 
             configurarModoSalvar(); // chama o metodo de configuracao para salvar
-        }
-                                               
-     
+    }                                           
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {                                             
          int index = tabelaFuncionarios.getSelectedRow();
@@ -534,30 +525,16 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Nenhum funcionário selecionado", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
-    }                                           
+    }                                            
 
-                                                
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
         configurarModoAlteracao();
     }                                            
 
-    private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void botaoPesquisarActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
-        String cpfBuscado = campoCpf.getText();
-        if(cpfBuscado.isEmpty()) {
-            System.out.println("Digite um CPF");
-        }
-        for (Funcionario funcionario : Funcionarios) {
-            if(funcionario.getCPF().equals(cpfBuscado)){
-                System.out.println(funcionario);
-                limparCampos();
-                break;
-            } else {
-                System.out.println("Não existe funcionário com o CPF: " + cpfBuscado);
-                limparCampos();
-            }           
-        }                
-    }                                           
+    }                                              
 
     /**
      * @param args the command line arguments
@@ -596,7 +573,6 @@ public class CadastroFuncionario extends javax.swing.JFrame {
 
     // Variables declaration - do not modify                     
     private javax.swing.JButton botaoAlterar;
-    private javax.swing.JButton botaoBuscar;
     private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoNovo;
     private javax.swing.JButton botaoPesquisar;
@@ -611,8 +587,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     private javax.swing.JTextField campoNome;
     private javax.swing.JTextField campoSenha;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tabelaFuncionarios;
     // End of variables declaration                   
-}    
-    
-
+}
