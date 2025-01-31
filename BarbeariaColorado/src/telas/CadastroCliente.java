@@ -83,6 +83,7 @@ public class CadastroCliente extends javax.swing.JFrame {
 
     }
 
+    // Método para carregar a tabela na interface
     public void carregarTabelaClientes() {
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Nome", "CPF", "Email", "Endereço", "Celular", "Data de Nascimento"}, 0);
 
@@ -100,6 +101,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         tabelaClientes.setModel(modelo);
     }
 
+    // Método para a busca dinamica pelo CPF e nome
     private void buscarClienteDinamico() {
         // Verifica se a busca dinâmica está ativa
         if (!buscaDinamicaAtiva) {
@@ -181,7 +183,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         campoDataNascimento.setEnabled(dataNascimento);
     }
 
-    // Método para configurar a interface para o modo de novo cliente
+    // Método para configurar a interface para o cadastra o cliente
     private void configurarModoNovo() {
         botao = "novo";
         limparCampos();
@@ -411,7 +413,7 @@ public class CadastroCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoVoltarActionPerformed
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
-        configurarModoNovo();
+        configurarModoNovo(); // chama o metodo de configuracao para cadastrar o cliente
     }//GEN-LAST:event_botaoNovoActionPerformed
 
     private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaClientesMouseClicked
@@ -422,7 +424,7 @@ public class CadastroCliente extends javax.swing.JFrame {
 
             // Obtém os valores da linha selecionada na tabela (nome, cpf, etc.)
             String nome = (String) modelo.getValueAt(linhaSelecionada, 0);
-            String cpf = (String) modelo.getValueAt(linhaSelecionada, 1); // CPF sem formatação
+            String cpf = (String) modelo.getValueAt(linhaSelecionada, 1); 
             String email = (String) modelo.getValueAt(linhaSelecionada, 2);
             String endereco = (String) modelo.getValueAt(linhaSelecionada, 3);
             String celular = (String) modelo.getValueAt(linhaSelecionada, 4);
@@ -444,7 +446,7 @@ public class CadastroCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelaClientesMouseClicked
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
-        configurarModoAlteracao();
+        configurarModoAlteracao(); // chama o metodo de configuracao para alterar
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
@@ -452,7 +454,7 @@ public class CadastroCliente extends javax.swing.JFrame {
 
         if (index >= 0 && index < tabelaClientes.getRowCount()) {  // Verifica se o índice é válido na tabela
             // Obtém o CPF do cliente na linha selecionada
-            String cpfSelecionado = (String) tabelaClientes.getValueAt(index, 1); // Supondo que o CPF está na segunda coluna
+            String cpfSelecionado = (String) tabelaClientes.getValueAt(index, 1);
 
             // Encontre o cliente correspondente na lista 'Clientes' pelo CPF
             Cliente clienteParaExcluir = null;
@@ -475,7 +477,7 @@ public class CadastroCliente extends javax.swing.JFrame {
                 if (confirmacao == JOptionPane.YES_OPTION) {
                     // Remove o cliente da lista
                     Clientes.remove(clienteParaExcluir);
-                    configurarModoExcluir();
+                    configurarModoExcluir(); // chama o metodo de configuraçao de excluir
                     JOptionPane.showMessageDialog(null, "Cliente excluído", "Mensagem", JOptionPane.PLAIN_MESSAGE);
                 }
             } else {
@@ -557,7 +559,7 @@ public class CadastroCliente extends javax.swing.JFrame {
                 }
             }
 
-            configurarModoSalvar();
+            configurarModoSalvar(); // chama o metodo de configuracao para salvar
         }
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
@@ -565,7 +567,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         if (Clientes.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nenhum cliente está cadastrado!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
         } else {
-            configurarModoPesquisa();
+            configurarModoPesquisa(); // chama o metodo de configuracao de pesquisa
         }
     }//GEN-LAST:event_botaoPesquisarActionPerformed
 
