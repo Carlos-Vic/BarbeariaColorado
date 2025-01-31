@@ -186,7 +186,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         botao = "novo";
         limparCampos();
         configurarCampos(true, true, true, true, true, true); // Todos os campos habilitados
-        configurarBotoes(true, false, false, false, false, true); // Apenas Salvar habilitado
+        configurarBotoes(true, true, false, true, false, true);
         buscaDinamicaAtiva = false; // Desativa a busca dinâmica
         campoNome.requestFocus();
     }
@@ -223,8 +223,8 @@ public class CadastroCliente extends javax.swing.JFrame {
     private void configurarModoExcluir() {
         carregarTabelaClientes();
         limparCampos();
-        configurarBotoes(true, true, false, false, false, true);
         configurarCampos(false, false, false, false, false, false);
+        configurarBotoes(true, true, false, false, false, true);
         buscaDinamicaAtiva = false;
     }
 
@@ -430,7 +430,7 @@ public class CadastroCliente extends javax.swing.JFrame {
 
             // Preenche os campos com os dados da linha clicada
             campoNome.setText(nome);
-            campoCpf.setText(cpf); 
+            campoCpf.setText(cpf);
             campoEmail.setText(email);
             campoEndereco.setText(endereco);
             campoCelular.setValue(celular); // Usa setValue() para definir o valor do celular
