@@ -1,35 +1,225 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package telas;
+
 import classes.Funcionario;
+import java.awt.Font;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 
-/**
- *
- * @author Carlos
- */
 public class CadastroFuncionario extends javax.swing.JFrame {
-    ArrayList<Funcionario> Funcionarios = new ArrayList<>();
-    private javax.swing.table.DefaultTableModel modeloTabela;
+    static ArrayList<Funcionario> Funcionarios;
+    String botao;
+    private boolean buscaDinamicaAtiva = false;
+    private int linhaSelecionada = -1;
+    private final Font fontePadrao = new Font("JetBrains Mono", Font.PLAIN, 14); // variavel para setar fontes nos campos formatados
+    private final Font fonteTabela = new Font("JetBrains Mono", Font.PLAIN, 12); // variavel para setar fontes nos campos formatados
+
     public CadastroFuncionario() {
         initComponents();
-        modeloTabela = new DefaultTableModel(
-        new Object[]{"Nome", "CPF", "Email", "Endereço", "Celular", "Cargo", "Senha"}, 
-        0 // Indica que a tabela começa com 0 linhas
-    );
-        tabelaFuncionarios.setModel(modeloTabela);
-        tabelaFuncionarios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        Funcionarios = new ArrayList<>();
+        
+        // Setando a fonte para os campos e para a tabela
+        campoNome.setFont(fontePadrao);
+        campoCpf.setFont(fontePadrao);
+        campoEmail.setFont(fontePadrao);
+        campoEndereco.setFont(fontePadrao);
+        campoCelular.setFont(fontePadrao);
+        campoCargo.setFont(fontePadrao);
+        campoSenha.setFont(fontePadrao);
+        tabelaFuncionarios.setFont(fonteTabela);
+        
+        // Habilitar os botões
+        configurarBotoes(true, true, false, true, false, false);
+        // Desabilitando os campos
+        configurarCampos(false, false, false, false, false, false,false);
+        
+        campoCpf.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                buscarFuncionarioDinamico();
+            }
+            
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                buscarFuncionarioDinamico();
+            }
+            
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                buscarFuncionarioDinamico();
+            }
+    
+        });
+        
+        campoNome.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                buscarFuncionarioDinamico();
+            }
+            
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                buscarFuncionarioDinamico();
+            }
+            
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                buscarFuncionarioDinamico();
+            }
+    
+        });
+                        
+    }
+    
+    public void carregarTabelaFuncionarios() {
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Nome", "CPF", "Email", "Endereço", "Celular", "Cargo", "Senha"}, 0);
+        
+        for (Funcionario funcionario : Funcionarios) {
+            Object linha[] = new Object[]{
+                funcionario.getNome(),
+                funcionario.getCPF(),
+                funcionario.getEmail(),
+                funcionario.getEndereco(),
+                funcionario.getCelular(),
+                funcionario.getCargo(),
+                funcionario.getSenha()};
+            modelo.addRow(linha);
+        }
+        
+        tabelaFuncionarios.setModel(modelo);
+    }
+    
+    private void buscarFuncionarioDinamico() {
+        // Verifica se a busca dinâmica está ativa
+        if (!buscaDinamicaAtiva) {
+            return;            
+        }
+
+        // Obtém o valor do campoCpf (sem formatação)
+        String pesquisaCpf = campoCpf.getText().trim(); // Remove caracteres não numéricos
+        String pesquisaNome = campoNome.getText().trim();
+        
+        // Se ambos os campos estiverem vazios, recarrega todos os clientes
+        if (pesquisaCpf.isEmpty() && pesquisaNome.isEmpty()) {
+            carregarTabelaFuncionarios(); // Recarrega a tabela com todos os clientes
+            return;
+        }
+        
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Nome", "CPF", "Email", "Endereço", "Celular", "Cargo", "Senha"}, 0);
+        
+        for (Funcionario funcionario : Funcionarios) {
+            // Remove a formatação do CPF do cliente para comparação
+            String cpfFuncionario = funcionario.getCPF();
+            
+            boolean cpfCorresponde = pesquisaCpf.isEmpty() || cpfFuncionario.startsWith(pesquisaCpf);
+            boolean nomeCorresponde = pesquisaNome.isEmpty() || funcionario.getNome().toLowerCase().contains(pesquisaNome.toLowerCase());
+            
+            // Verifica se o CPF ou o nome corresponde ao valor digitado
+            if (cpfCorresponde && nomeCorresponde) {
+                Object linha[] = new Object[]{
+                    funcionario.getNome(),
+                    funcionario.getCPF(),
+                    funcionario.getEmail(),
+                    funcionario.getEndereco(),
+                    funcionario.getCelular(),
+                    funcionario.getCargo(),
+                    funcionario.getSenha()};
+                modelo.addRow(linha);
+            }
+        }
+        
+        tabelaFuncionarios.setModel(modelo);
+        // Tenta selecionar a primeira linha após a atualização
+        if (modelo.getRowCount() > 0) {
+            tabelaFuncionarios.setRowSelectionInterval(0, 0); // Seleciona a primeira linha
+        }
+        
+    }
+    
+    // Método para limpar os campos
+    private void limparCampos() {
+        campoNome.setText("");
+        campoCpf.setText("");
+        campoEmail.setText("");
+        campoEndereco.setText("");
+        campoCelular.setText("");
+        campoCargo.setText("");
+        campoSenha.setText("");
+    }
+    
+    // Método para habilitar/desabilitar campos e botões
+    private void configurarBotoes(boolean voltar, boolean novo, boolean alterar, boolean pesquisar, boolean excluir, boolean salvar) {
+        botaoVoltar.setEnabled(voltar);
+        botaoNovo.setEnabled(novo);
+        botaoAlterar.setEnabled(alterar);
+        botaoPesquisar.setEnabled(pesquisar);
+        botaoExcluir.setEnabled(excluir);
+        botaoSalvar.setEnabled(salvar);
+    }
+    
+    // Método para habilitar/desabilitar campos de texto
+    private void configurarCampos(boolean nome, boolean cpf, boolean email, boolean endereco, boolean celular, boolean cargo, boolean senha) {
+        campoNome.setEnabled(nome);
+        campoCpf.setEnabled(cpf);
+        campoEmail.setEnabled(email);
+        campoEndereco.setEnabled(endereco);
+        campoCelular.setEnabled(celular);
+        campoCargo.setEnabled(cargo);
+        campoSenha.setEnabled(senha);
+    }
+    
+    // Método para configurar a interface para o cadastra o cliente
+    private void configurarModoNovo() {
+        botao = "novo";
+        limparCampos();
+        configurarCampos(true, true, true, true, true, true, true); // Todos os campos habilitados
+        configurarBotoes(true, true, false, true, false, true);
+        buscaDinamicaAtiva = false; // Desativa a busca dinâmica
+        campoNome.requestFocus();
+    }
+    
+    // Método para configurar a interface para o modo de alteração
+    private void configurarModoAlteracao() {
+        botao = "alterar";
+        configurarCampos(true, true, true, true, true, true,true); // Todos os campos habilitados
+        configurarBotoes(true, false, false, false, false, true); // Apenas Salvar habilitado
+        buscaDinamicaAtiva = false; // Desativa a busca dinâmica
+        campoNome.requestFocus();
+    }
+    
+    // Método para configurar a interface para o modo de pesquisa
+    private void configurarModoPesquisa() {
+        limparCampos();
+        configurarCampos(true, true, false, false, false, false,false); // Nome e CPF habilitado
+        configurarBotoes(true, true, false, true, false, false); // Apenas Pesquisar habilitado
+        buscaDinamicaAtiva = true; // Ativa a busca dinâmica
+        campoNome.requestFocus();
+    }
+    
+    // Método para configurar a interface para o modo de salvar
+    private void configurarModoSalvar() {
+        carregarTabelaFuncionarios();
+        limparCampos();
+        configurarCampos(false, false, false, false, false, false,false); // Apenas CPF habilitado
+        configurarBotoes(true, true, false, true, false, false);
+        buscaDinamicaAtiva = false;
+        campoCpf.requestFocus();
+    }
+    
+    // Método para configurar a interface para o modo de excluir
+    private void configurarModoExcluir() {
+        carregarTabelaFuncionarios();
+        limparCampos();
+        configurarCampos(false, false, false, false, false, false,false);
+        configurarBotoes(true, true, false, false, false, true);
+        buscaDinamicaAtiva = false;
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
@@ -222,9 +412,7 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     }// </editor-fold>                        
     
     private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        MenuGerente menuGerente = new MenuGerente();
-        menuGerente.setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }                                           
 
     private void campoCpfActionPerformed(java.awt.event.ActionEvent evt) {                                         
@@ -240,104 +428,117 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     }                                              
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
-        Funcionario f1 = new Funcionario(campoNome.getText(), campoCpf.getText(), campoEmail.getText(), campoEndereco.getText(), campoCelular.getText(), campoCargo.getText(), campoSenha.getText());
-        System.out.println("funcionario cadastrado " + f1.getNome());
-        modeloTabela.addRow(new Object[]{
-        f1.getNome(),
-        f1.getCPF(),
-        f1.getEmail(),
-        f1.getEndereco(),
-        f1.getCelular(),
-        f1.getCargo(),
-        f1.getSenha()
-    });
-        Funcionarios.add(f1); 
-        limparCampos();                       
+        configurarModoNovo();                       
     }                                         
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-        MenuGerente menuGerente = new MenuGerente();
-        menuGerente.setVisible(true);
-        this.dispose();
-    }                                           
+         if (campoNome.getText().equals("") || campoCpf.getText().equals("") || campoEmail.getText().equals("")
+                || campoEndereco.getText().equals("") || campoCelular.getText().equals("")
+                || campoCargo.getText().equals("") || campoSenha.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Todos os campos devem ser inseridos!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+            campoNome.requestFocus();
+        } 
+
+            int confirmacao;
+            if (botao.equals("novo")) {
+                confirmacao = JOptionPane.showConfirmDialog(
+                        null,
+                        "Tem certeza de que deseja cadastrar este funcionário?",
+                        "Confirmação",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (confirmacao == JOptionPane.YES_OPTION) {
+                    Funcionario funcionario = new Funcionario(nome, cpf, email, endereco, celular, cargo, senha);
+                    Funcionarios.add(funcionario);
+                    JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                }
+            } else if (botao.equals("alterar")) {
+                if (linhaSelecionada >= 0) {
+                    confirmacao = JOptionPane.showConfirmDialog(
+                            null, "Tem certeza de que deseja alterar os dados deste funcionário?",
+                            "Confirmação", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+
+                    if (confirmacao == JOptionPane.YES_OPTION) {
+                        DefaultTableModel modelo = (DefaultTableModel) tabelaFuncionarios.getModel();
+                        String cpfSelecionado = (String) modelo.getValueAt(linhaSelecionada, 1); // CPF na tabela
+
+                        // Busca funcionario correto usando CPF
+                        Funcionario funcionario = Funcionarios.stream()
+                                .filter(c -> c.getCPF().equals(cpfSelecionado))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (funcionario != null) {
+                            funcionario.setNome(nome);
+                            funcionario.setCPF(cpf);
+                            funcionario.setEmail(email);
+                            funcionario.setEndereco(endereco);
+                            funcionario.setCelular(celular);
+                            funcionario.setCargo(cargo);
+                            funcionario.setSenha(senha);
+
+                            JOptionPane.showMessageDialog(null, "Dados do funcionário alterados com sucesso", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro ao localizar o funcionário.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nenhum funcionário selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+
+            configurarModoSalvar(); // chama o metodo de configuracao para salvar
+        }
+                                               
+     
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        int selectedRow = tabelaFuncionarios.getSelectedRow();
-        System.out.println("Linha selecionada: " + selectedRow);
-        System.out.println("Total de funcionários na lista: " + Funcionarios.size());
-        System.out.println("Total de linhas na tabela: " + modeloTabela.getRowCount());
-        
-        if (selectedRow >= 0 && selectedRow < Funcionarios.size()) {
-            // Remover a linha da tabela primeiro
-            modeloTabela.removeRow(selectedRow);
-            Funcionarios.remove(selectedRow);
-            System.out.println("Funcionário excluído com sucesso.");
-        } else {
-            System.out.println("Selecione um funcionário válido para excluir.");
-        }
-    }                                            
+         int index = tabelaFuncionarios.getSelectedRow();
 
+        if (index >= 0 && index < tabelaFuncionarios.getRowCount()) {  // Verifica se o índice é válido na tabela
+            // Obtém o CPF do funcionário na linha selecionada
+            String cpfSelecionado = (String) tabelaFuncionarios.getValueAt(index, 1);
+
+            // Encontre o funcionario correspondente na lista 'Funcionários' pelo CPF
+            Funcionario funcionarioParaExcluir = null;
+            for (Funcionario funcionario : Funcionarios) {
+                if (funcionario.getCPF().equals(cpfSelecionado)) {
+                    funcionarioParaExcluir = funcionario;
+                    break;
+                }
+            }
+            
+            if (funcionarioParaExcluir != null) {
+                int confirmacao = JOptionPane.showConfirmDialog(
+                        null,
+                        "Tem certeza de que deseja excluir este cliente?",
+                        "Confirmação",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (confirmacao == JOptionPane.YES_OPTION) {
+                    // Remove o funcionário da lista
+                    Funcionarios.remove(funcionarioParaExcluir);
+                    configurarModoExcluir(); // chama o metodo de configuraçao de excluir
+                    JOptionPane.showMessageDialog(null, "Funcionário excluído", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Funcionário não encontrado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum funcionário selecionado", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }                                           
+
+                                                
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        int selectedRow = tabelaFuncionarios.getSelectedRow(); // Obtém a linha selecionada
-
-        if (selectedRow >= 0 && selectedRow < Funcionarios.size()) {
-            Funcionario funcionario = Funcionarios.get(selectedRow);
-
-            // Verifica o campo a ser alterado e muda
-            if (!campoNome.getText().isEmpty() && !campoNome.getText().equals(funcionario.getNome())) {
-                funcionario.setNome(campoNome.getText());
-                modeloTabela.setValueAt(funcionario.getNome(), selectedRow, 0);  // Atualiza o nome na tabela
-                System.out.println("Nome alterado com sucesso");
-                limparCampos();
-            }
-            if (!campoCpf.getText().isEmpty() && !campoCpf.getText().equals(funcionario.getCPF())) {
-                funcionario.setCPF(campoCpf.getText());
-                modeloTabela.setValueAt(funcionario.getCPF(), selectedRow, 1);  // Atualiza o CPF na tabela
-                System.out.println("CPF alterado com sucesso");
-                limparCampos();
-            }
-            if (!campoEmail.getText().isEmpty() && !campoEmail.getText().equals(funcionario.getEmail())) {
-                funcionario.setEmail(campoEmail.getText());
-                modeloTabela.setValueAt(funcionario.getEmail(), selectedRow, 2);  // Atualiza o email na tabela
-                System.out.println("Email alterado com sucesso");
-                limparCampos();
-            }
-            if (!campoEndereco.getText().isEmpty() && !campoEndereco.getText().equals(funcionario.getEndereco())) {
-                funcionario.setEndereco(campoEndereco.getText());
-                modeloTabela.setValueAt(funcionario.getEndereco(), selectedRow, 3);  // Atualiza o endereço na tabela
-                System.out.println("Endereço alterado com sucesso");
-                limparCampos();
-            }
-            if (!campoCelular.getText().isEmpty() && !campoCelular.getText().equals(funcionario.getCelular())) {
-                funcionario.setCelular(campoCelular.getText());
-                modeloTabela.setValueAt(funcionario.getCelular(), selectedRow, 4);  // Atualiza o celular na tabela
-                System.out.println("Celular alterado com sucesso");
-                limparCampos();
-            }
-            if (!campoCargo.getText().isEmpty() && !campoCargo.getText().equals(funcionario.getCargo())) {
-                funcionario.setCargo(campoCargo.getText());
-                modeloTabela.setValueAt(funcionario.getCargo(), selectedRow, 5);  // Atualiza o cargo na tabela
-                System.out.println("Cargo alterado com sucesso");
-                limparCampos();
-            }
-            if (!campoSenha.getText().isEmpty() && !campoSenha.getText().equals(funcionario.getSenha())) {
-                funcionario.setSenha(campoSenha.getText());
-                modeloTabela.setValueAt(funcionario.getSenha(), selectedRow, 6);  // Atualiza a senha na tabela
-                System.out.println("Senha alterada com sucesso");
-                limparCampos();
-            }
-            // Atualiza o objeto na lista
-            Funcionarios.set(selectedRow, funcionario);
-            // atulizar tabela
-            modeloTabela.fireTableDataChanged();
-
-            System.out.println("Todos os dados foram atualizados com sucesso!");
-
-        } else {
-            System.out.println("Selecione um funcionário válido para atualizar.");
-        }
+        configurarModoAlteracao();
     }                                            
 
     private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -422,5 +623,6 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     campoCargo.setText("");
     campoSenha.setText("");
     }
+}    
     
-}
+
