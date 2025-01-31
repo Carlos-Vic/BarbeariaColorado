@@ -1,15 +1,17 @@
 package classes;
 
 public class Produto {
+
     private int codigo, quantidade;
     private String nome;
     private double preco;
 
-    public Produto(int codigo, int quantidade, String nome, double preco) {
+    public Produto(int codigo, String nome, double preco, int quantidade) {
         this.codigo = codigo;
-        this.quantidade = quantidade;
         this.nome = nome;
         this.preco = preco;
+        this.quantidade = quantidade;
+
     }
 
     public int getCodigo() {
@@ -43,6 +45,5 @@ public class Produto {
     public void setPreco(double preco) {
         this.preco = preco;
     }
-    
-    
+
 }
