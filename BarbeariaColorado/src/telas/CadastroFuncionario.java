@@ -613,16 +613,6 @@ public class CadastroFuncionario extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabelaFuncionarios;
     // End of variables declaration                   
-
-    private void limparCampos() {
-    campoNome.setText("");
-    campoCpf.setText("");
-    campoEmail.setText("");
-    campoEndereco.setText("");
-    campoCelular.setText("");
-    campoCargo.setText("");
-    campoSenha.setText("");
-    }
 }    
     
 
