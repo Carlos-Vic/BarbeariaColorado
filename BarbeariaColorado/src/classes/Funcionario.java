@@ -27,6 +27,11 @@ public class Funcionario extends Pessoa {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
     /*
     public String cadastrarCliente(ArrayList<Cliente> clientes, Cliente novoCliente) {
         if (novoCliente == null) {

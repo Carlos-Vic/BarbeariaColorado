@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class CadastroFuncionario extends javax.swing.JFrame {
 
-    static ArrayList<Funcionario> Funcionarios;
+    static ArrayList<Funcionario> Funcionarios = new ArrayList();
 
     String botao;
     private boolean buscaDinamicaAtiva = false; // Controla se a busca dinâmica está ativa
@@ -20,8 +20,6 @@ public class CadastroFuncionario extends javax.swing.JFrame {
 
     public CadastroFuncionario() {
         initComponents();
-
-        Funcionarios = new ArrayList<>();
 
         // Setando a fonte para os campos e para a tabela
         campoNome.setFont(fontePadrao);
@@ -176,6 +174,16 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         campoSenha.setEnabled(senha);
     }
 
+    // Método para buscar um funcionário pelo CPF para o evento de clicar na tabela
+    private Funcionario buscarFuncionarioPorCPF(String cpf) {
+        for (Funcionario funcionario : Funcionarios) {
+            if (funcionario.getCPF().equals(cpf)) {
+                return funcionario;
+            }
+        }
+        return null; // Retorna null se não encontrar o funcionário
+    }
+
     // Método para configurar a interface para o cadastra o funcionario
     private void configurarModoNovo() {
         botao = "novo";
@@ -184,16 +192,6 @@ public class CadastroFuncionario extends javax.swing.JFrame {
         configurarBotoes(true, true, false, true, false, true);
         buscaDinamicaAtiva = false; // Desativa a busca dinâmica
         campoNome.requestFocus();
-    }
-
-    // Método para buscar um funcionário pelo CPF
-    private Funcionario buscarFuncionarioPorCPF(String cpf) {
-        for (Funcionario funcionario : Funcionarios) {
-            if (funcionario.getCPF().equals(cpf)) {
-                return funcionario;
-            }
-        }
-        return null; // Retorna null se não encontrar o funcionário
     }
 
     // Método para configurar a interface para o modo de alteração

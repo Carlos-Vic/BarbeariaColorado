@@ -41,18 +41,33 @@ public class MenuFuncionario extends javax.swing.JFrame {
         botaoCadastrarCliente.setBorderPainted(false);
         botaoCadastrarCliente.setContentAreaFilled(false);
         botaoCadastrarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoCadastrarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCadastrarClienteActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoCadastrarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 290, 40));
 
         botaoFazerAgendamento.setBorder(null);
         botaoFazerAgendamento.setBorderPainted(false);
         botaoFazerAgendamento.setContentAreaFilled(false);
         botaoFazerAgendamento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoFazerAgendamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoFazerAgendamentoActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoFazerAgendamento, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 180, 290, 40));
 
         botaoFinalizarAtendimento.setBorder(null);
         botaoFinalizarAtendimento.setBorderPainted(false);
         botaoFinalizarAtendimento.setContentAreaFilled(false);
         botaoFinalizarAtendimento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoFinalizarAtendimento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoFinalizarAtendimentoActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoFinalizarAtendimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 260, 290, 40));
 
         botaoDesconectar.setBorder(null);
@@ -76,6 +91,20 @@ public class MenuFuncionario extends javax.swing.JFrame {
     private void botaoDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDesconectarActionPerformed
         dispose();
     }//GEN-LAST:event_botaoDesconectarActionPerformed
+
+    private void botaoFazerAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFazerAgendamentoActionPerformed
+        new CadastroAgendamento().setVisible(true);
+    }//GEN-LAST:event_botaoFazerAgendamentoActionPerformed
+
+    private void botaoCadastrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarClienteActionPerformed
+        new CadastroCliente().setVisible(true);
+    }//GEN-LAST:event_botaoCadastrarClienteActionPerformed
+
+    private void botaoFinalizarAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFinalizarAtendimentoActionPerformed
+        // Coloquei para abrir tela de funcionario somente para testar o funcionamento da tela de agendamentos
+        // alterar depois para a abrir a tela certa
+        new CadastroFuncionario().setVisible(true);
+    }//GEN-LAST:event_botaoFinalizarAtendimentoActionPerformed
 
     /**
      * @param args the command line arguments

@@ -2,10 +2,10 @@ package classes;
 
 public enum Servico {
     CORTE_SOCIAL("Corte Social", 50, 30),
-    CORTE_DEGRADE("Corte Degradê", 40, 45),
-    BARBA("Barba", 30, 40),
-    SOBRANCELHA("Sobrancelha", 20, 15),
-    PINTAR_CABELO("Pintar Cabelo", 100, 120),
+    CORTE_DEGRADE("Corte Degradê", 40, 30),
+    BARBA("Barba", 30, 30),
+    SOBRANCELHA("Sobrancelha", 20, 30),
+    PINTAR_CABELO("Pintar Cabelo", 100, 60),
     HIDRATACAO("Hidratação", 40, 30);
 
     private final String nome; // Nome do serviço (para exibição no combobox)

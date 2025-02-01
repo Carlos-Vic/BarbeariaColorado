@@ -25,14 +25,6 @@ public class Agendamento {
         this.data = data;
         this.horaInicio = horaInicio;
         this.horaFim = horaInicio.plusMinutes(servico.getDuracao()); // Calcula a hora de fim
-
-        // Verifica se o horário está disponível
-        if (!verificarDisponibilidade()) {
-            throw new IllegalArgumentException("Horário indisponível para agendamento.");
-        }
-
-        // Adiciona o agendamento à lista
-        agendamentos.add(this);
     }
 
     // Getters
@@ -60,22 +52,70 @@ public class Agendamento {
         return horaFim;
     }
 
-    // Método para verificar a disponibilidade do horário
-    private boolean verificarDisponibilidade() {
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public void setServico(Servico servico) {
+        this.servico = servico;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public void setHoraFim(LocalTime horaFim) {
+        this.horaFim = horaFim;
+    }
+
+    public static void setAgendamentos(List<Agendamento> agendamentos) {
+        Agendamento.agendamentos = agendamentos;
+    }
+
+    // Método para adicionar um agendamento à lista
+    public static void adicionarAgendamento(Agendamento agendamento) {
+        agendamentos.add(agendamento);
+    }
+
+    public static boolean verificarDisponibilidade(Funcionario funcionario, LocalDate data, LocalTime horaInicio, int duracao, Agendamento agendamentoIgnorado, boolean ehAlteracao) {
+        LocalTime horaFim = horaInicio.plusMinutes(duracao); // Calcular o horário de fim do novo agendamento
+
+        // Verificar todos os agendamentos para o mesmo funcionário na mesma data
         for (Agendamento agendamento : agendamentos) {
-            if (agendamento.getFuncionario().equals(this.funcionario) && agendamento.getData().equals(this.data)) {
-                // Verifica se há sobreposição de horários
-                if (this.horaInicio.isBefore(agendamento.getHoraFim()) && this.horaFim.isAfter(agendamento.getHoraInicio())) {
-                    return false; // Há sobreposição de horários
+            // Ignora o agendamento especificado (por exemplo, o agendamento que está sendo alterado)
+            if (agendamentoIgnorado != null && agendamento.equals(agendamentoIgnorado)) {
+                continue;
+            }
+
+            if (agendamento.getFuncionario().equals(funcionario) && agendamento.getData().equals(data)) {
+                LocalTime agendamentoInicio = agendamento.getHoraInicio();
+                LocalTime agendamentoFim = agendamento.getHoraFim(); // Hora de fim do agendamento existente
+
+                // Verificar se os horários se sobrepõem
+                if (horaInicio.isBefore(agendamentoFim) && horaFim.isAfter(agendamentoInicio)) {
+                    // Se for uma alteração, permite que o horário original seja mantido
+                    if (ehAlteracao && horaInicio.equals(agendamentoIgnorado.getHoraInicio())) {
+                        continue; // Ignora o conflito para o horário original durante a alteração
+                    }
+                    return false; // Conflito de horário
                 }
             }
         }
         return true; // Horário disponível
     }
 
-    // Método estático para listar agendamentos de um funcionário em uma data
-    public static List<Agendamento> listarAgendamentos(Funcionario funcionario, LocalDate data) {
+    // Método para obter todos os agendamentos de um funcionário em uma data específica
+    public static List<Agendamento> getAgendamentosPorFuncionarioEData(Funcionario funcionario, LocalDate data) {
         List<Agendamento> agendamentosDoDia = new ArrayList<>();
+
         for (Agendamento agendamento : agendamentos) {
             if (agendamento.getFuncionario().equals(funcionario) && agendamento.getData().equals(data)) {
                 agendamentosDoDia.add(agendamento);
@@ -84,50 +124,7 @@ public class Agendamento {
         return agendamentosDoDia;
     }
 
-    // Método estático para verificar horários disponíveis de um funcionário em uma data
-    public static List<LocalTime> verificarHorariosDisponiveis(Funcionario funcionario, LocalDate data) {
-        List<LocalTime> horariosDisponiveis = new ArrayList<>();
-        LocalTime horarioAtual = LocalTime.of(9, 0); // Horário de abertura da barbearia
-        LocalTime horarioFechamento = LocalTime.of(18, 0); // Horário de fechamento da barbearia
-
-        // Lista de agendamentos do funcionário na data especificada
-        List<Agendamento> agendamentosDoDia = listarAgendamentos(funcionario, data);
-
-        while (horarioAtual.isBefore(horarioFechamento)) {
-            boolean horarioLivre = true;
-
-            // Verifica se o horário atual está livre
-            for (Agendamento agendamento : agendamentosDoDia) {
-                if (horarioAtual.isBefore(agendamento.getHoraFim()) && horarioAtual.plusMinutes(30).isAfter(agendamento.getHoraInicio())) {
-                    horarioLivre = false;
-                    break;
-                }
-            }
-
-            if (horarioLivre) {
-                horariosDisponiveis.add(horarioAtual);
-            }
-
-            // Avança para o próximo horário (intervalo de 30 minutos)
-            horarioAtual = horarioAtual.plusMinutes(30);
-        }
-
-        return horariosDisponiveis;
-    }
-
-    // Método estático para adicionar um agendamento
-    public static void adicionarAgendamento(Agendamento agendamento) {
-        agendamentos.add(agendamento);
-    }
-
-    // Método estático para remover um agendamento
-    public static void removerAgendamento(Agendamento agendamento) {
-        agendamentos.remove(agendamento);
-    }
-
-    // Método estático para obter todos os agendamentos
     public static List<Agendamento> getAgendamentos() {
         return agendamentos;
     }
-
 }

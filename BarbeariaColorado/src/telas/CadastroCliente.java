@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class CadastroCliente extends javax.swing.JFrame {
 
-    static ArrayList<Cliente> Clientes;
+    static ArrayList<Cliente> Clientes = new ArrayList<>();
 
     String botao;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -27,8 +27,6 @@ public class CadastroCliente extends javax.swing.JFrame {
      */
     public CadastroCliente() {
         initComponents();
-
-        Clientes = new ArrayList<>();
 
         // Setando a fonte para os campos e para a tabela
         campoNome.setFont(fontePadrao);
@@ -424,7 +422,7 @@ public class CadastroCliente extends javax.swing.JFrame {
 
             // Obtém os valores da linha selecionada na tabela (nome, cpf, etc.)
             String nome = (String) modelo.getValueAt(linhaSelecionada, 0);
-            String cpf = (String) modelo.getValueAt(linhaSelecionada, 1); 
+            String cpf = (String) modelo.getValueAt(linhaSelecionada, 1);
             String email = (String) modelo.getValueAt(linhaSelecionada, 2);
             String endereco = (String) modelo.getValueAt(linhaSelecionada, 3);
             String celular = (String) modelo.getValueAt(linhaSelecionada, 4);

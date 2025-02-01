@@ -2,7 +2,7 @@ package classes;
 
 import java.time.LocalDate;
 
-public class Cliente extends Pessoa{
+public class Cliente extends Pessoa {
 
     private LocalDate dataAniversario;
 
@@ -18,5 +18,9 @@ public class Cliente extends Pessoa{
     public void setDataAniversario(LocalDate dataAniversario) {
         this.dataAniversario = dataAniversario;
     }
-}
 
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
+}
