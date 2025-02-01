@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Gerente extends Pessoa {
+
     private String senha;
 
     public Gerente(String nome, String CPF, String email, String endereco, String celular, String senha) {
@@ -38,6 +39,7 @@ public class Gerente extends Pessoa {
         System.out.println("Funcionário(a) não encontrado.");
         return " ";
     }
+
     public String excluirFuncionario(ArrayList<Funcionario> funcionarios, String CPF) {
         Funcionario funcionario = (Funcionario) buscarFuncionario(funcionarios, CPF);
         if (funcionario != null) {
@@ -49,6 +51,7 @@ public class Gerente extends Pessoa {
 
     }
 
+    /*
     public String cadastrarServico(ArrayList<Servico> servicos, Servico novoServico) {
         for (Servico servico : servicos) {
             if (servico.getTipo().equals(novoServico.getTipo())) {
@@ -178,11 +181,7 @@ public class Gerente extends Pessoa {
         }
     }
 
-    /*
-    public void editarCliente {};
-    public void editarServico;
- */
 
 
+     */
 }
-

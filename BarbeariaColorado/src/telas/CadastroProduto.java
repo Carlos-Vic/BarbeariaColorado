@@ -217,7 +217,7 @@ public class CadastroProduto extends javax.swing.JFrame {
         carregarTabelaProdutos();
         limparCampos();
         configurarCampos(false, false, false, false);
-        configurarBotoes(true, true, false, true, false, true);
+        configurarBotoes(true, true, false, true, false, false);
         buscaDinamicaAtiva = false;
     }
 

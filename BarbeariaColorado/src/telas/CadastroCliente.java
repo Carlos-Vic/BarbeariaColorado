@@ -226,7 +226,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         carregarTabelaClientes();
         limparCampos();
         configurarCampos(false, false, false, false, false, false);
-        configurarBotoes(true, true, false, false, false, true);
+        configurarBotoes(true, true, false, true, false, false);
         buscaDinamicaAtiva = false;
     }
 
@@ -399,7 +399,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaClientes);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 80, 770, 540));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 850, 540));
 
         cadatroClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/tela_cadastro_clientes.png"))); // NOI18N
         getContentPane().add(cadatroClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));

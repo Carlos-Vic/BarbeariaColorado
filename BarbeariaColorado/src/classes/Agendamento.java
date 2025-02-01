@@ -1,8 +1,9 @@
 package classes;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Agendamento {
 
@@ -12,60 +13,29 @@ public class Agendamento {
     private LocalDate data;
     private LocalTime horaInicio;
     private LocalTime horaFim;
-    private boolean confirmado;
 
+    // Lista estática para armazenar todos os agendamentos
+    private static List<Agendamento> agendamentos = new ArrayList<>();
+
+    // Construtor
     public Agendamento(Cliente cliente, Funcionario funcionario, Servico servico, LocalDate data, LocalTime horaInicio) {
         this.cliente = cliente;
         this.funcionario = funcionario;
         this.servico = servico;
         this.data = data;
         this.horaInicio = horaInicio;
-        this.horaFim = calcularHoraFim(horaInicio, servico); // Considera a duração do serviço para calcular o horário final
-        this.confirmado = false; // O agendamento não está confirmado inicialmente
-    }
+        this.horaFim = horaInicio.plusMinutes(servico.getDuracao()); // Calcula a hora de fim
 
-    // Método para calcular a hora de término do serviço com base na duração
-    private LocalTime calcularHoraFim(LocalTime horaInicio, Servico servico) {
-        Duration duracaoServico = servico.getDuracao();  // Duração do serviço
-        return horaInicio.plus(duracaoServico); // Adiciona a duração ao horário de início
-    }
-
-// Método para confirmar o agendamento, garantindo que a confirmação e disponibilidade funcionem corretamente
-    public void confirmarAgendamento() {
-        if (!confirmado) {
-            // Verifica se o funcionário está disponível e confirma o agendamento
-            if (funcionario.verificarDisponibilidade(data, horaInicio, horaFim)) {
-                confirmado = true;
-                funcionario.adicionarAgendamento(this);  // Adiciona à agenda do funcionário
-                System.out.println("Agendamento confirmado para o cliente " + cliente.getNome() + " no dia " + data + " às " + horaInicio);
-            } else {
-                System.out.println("O funcionário não está disponível neste horário.");
-            }
-        } else {
-            System.out.println("Este agendamento já está confirmado.");
+        // Verifica se o horário está disponível
+        if (!verificarDisponibilidade()) {
+            throw new IllegalArgumentException("Horário indisponível para agendamento.");
         }
+
+        // Adiciona o agendamento à lista
+        agendamentos.add(this);
     }
 
-// Método para cancelar o agendamento
-    public void cancelarAgendamento() {
-        if (confirmado) {
-            confirmado = false;
-            funcionario.removerAgendamento(this); // Remove o agendamento da agenda do funcionário
-            System.out.println("Agendamento cancelado para o cliente " + cliente.getNome() + " no dia " + data + " às " + horaInicio);
-        } else {
-            System.out.println("Este agendamento não está confirmado e não pode ser cancelado.");
-        }
-    }
-
-    // Getters e Setters
-    public boolean isConfirmado() {
-        return confirmado;
-    }
-
-    public void setConfirmado(boolean confirmado) {
-        this.confirmado = confirmado;
-    }
-
+    // Getters
     public Cliente getCliente() {
         return cliente;
     }
@@ -89,4 +59,75 @@ public class Agendamento {
     public LocalTime getHoraFim() {
         return horaFim;
     }
+
+    // Método para verificar a disponibilidade do horário
+    private boolean verificarDisponibilidade() {
+        for (Agendamento agendamento : agendamentos) {
+            if (agendamento.getFuncionario().equals(this.funcionario) && agendamento.getData().equals(this.data)) {
+                // Verifica se há sobreposição de horários
+                if (this.horaInicio.isBefore(agendamento.getHoraFim()) && this.horaFim.isAfter(agendamento.getHoraInicio())) {
+                    return false; // Há sobreposição de horários
+                }
+            }
+        }
+        return true; // Horário disponível
+    }
+
+    // Método estático para listar agendamentos de um funcionário em uma data
+    public static List<Agendamento> listarAgendamentos(Funcionario funcionario, LocalDate data) {
+        List<Agendamento> agendamentosDoDia = new ArrayList<>();
+        for (Agendamento agendamento : agendamentos) {
+            if (agendamento.getFuncionario().equals(funcionario) && agendamento.getData().equals(data)) {
+                agendamentosDoDia.add(agendamento);
+            }
+        }
+        return agendamentosDoDia;
+    }
+
+    // Método estático para verificar horários disponíveis de um funcionário em uma data
+    public static List<LocalTime> verificarHorariosDisponiveis(Funcionario funcionario, LocalDate data) {
+        List<LocalTime> horariosDisponiveis = new ArrayList<>();
+        LocalTime horarioAtual = LocalTime.of(9, 0); // Horário de abertura da barbearia
+        LocalTime horarioFechamento = LocalTime.of(18, 0); // Horário de fechamento da barbearia
+
+        // Lista de agendamentos do funcionário na data especificada
+        List<Agendamento> agendamentosDoDia = listarAgendamentos(funcionario, data);
+
+        while (horarioAtual.isBefore(horarioFechamento)) {
+            boolean horarioLivre = true;
+
+            // Verifica se o horário atual está livre
+            for (Agendamento agendamento : agendamentosDoDia) {
+                if (horarioAtual.isBefore(agendamento.getHoraFim()) && horarioAtual.plusMinutes(30).isAfter(agendamento.getHoraInicio())) {
+                    horarioLivre = false;
+                    break;
+                }
+            }
+
+            if (horarioLivre) {
+                horariosDisponiveis.add(horarioAtual);
+            }
+
+            // Avança para o próximo horário (intervalo de 30 minutos)
+            horarioAtual = horarioAtual.plusMinutes(30);
+        }
+
+        return horariosDisponiveis;
+    }
+
+    // Método estático para adicionar um agendamento
+    public static void adicionarAgendamento(Agendamento agendamento) {
+        agendamentos.add(agendamento);
+    }
+
+    // Método estático para remover um agendamento
+    public static void removerAgendamento(Agendamento agendamento) {
+        agendamentos.remove(agendamento);
+    }
+
+    // Método estático para obter todos os agendamentos
+    public static List<Agendamento> getAgendamentos() {
+        return agendamentos;
+    }
+
 }

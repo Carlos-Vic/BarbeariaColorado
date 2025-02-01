@@ -1,51 +1,40 @@
 package classes;
 
-import java.time.Duration;
+public enum Servico {
+    CORTE_SOCIAL("Corte Social", 50, 30),
+    CORTE_DEGRADE("Corte Degradê", 40, 45),
+    BARBA("Barba", 30, 40),
+    SOBRANCELHA("Sobrancelha", 20, 15),
+    PINTAR_CABELO("Pintar Cabelo", 100, 120),
+    HIDRATACAO("Hidratação", 40, 30);
 
-public class Servico {
+    private final String nome; // Nome do serviço (para exibição no combobox)
+    private final int preco;   // Preço do serviço
+    private final int duracao; // Duração do serviço em minutos
 
-    private String tipo;
-    private String descricao;
-    private double preco;
-    private Duration duracao;
-
-    public Servico(String tipo, String descricao, double preco, Duration duracao) {
-        this.tipo = tipo;
-        this.descricao = descricao;
+    // Construtor
+    Servico(String nome, int preco, int duracao) {
+        this.nome = nome;
         this.preco = preco;
         this.duracao = duracao;
     }
 
-    public String getTipo() {
-        return tipo;
+    // Getters
+    public String getNome() {
+        return nome;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public double getPreco() {
+    public int getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public Duration getDuracao() {
+    public int getDuracao() {
         return duracao;
     }
 
-    public void setDuracao(Duration duracao) {
-        this.duracao = duracao;
+    // Sobrescreve o método toString() para exibir o nome do serviço no combobox da tela agendamento
+    @Override
+    public String toString() {
+        return nome;
     }
-
 }
