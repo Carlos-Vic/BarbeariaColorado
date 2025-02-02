@@ -119,7 +119,6 @@ public class CadastroCliente extends javax.swing.JFrame {
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Nome", "CPF", "Email", "Endereço", "Celular", "Data de Nascimento"}, 0);
 
         for (Cliente cliente : Clientes) {
-            // Remove a formatação do CPF do cliente para comparação
             String cpfCliente = cliente.getCPF();
 
             boolean cpfCorresponde = pesquisaCpf.isEmpty() || cpfCliente.startsWith(pesquisaCpf);

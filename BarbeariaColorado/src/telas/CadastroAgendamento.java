@@ -26,13 +26,15 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     static ArrayList<Agendamento> Agendamentos = (ArrayList<Agendamento>) Agendamento.getAgendamentos();
     String botao;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private int linhaSelecionada = -1; // Para armazenar a linha selecionada
+    private boolean criandoNovoAgendamento = false; //  flag para saber se está criando um novo agendamento
     private final Font fontePadrao = new Font("JetBrains Mono", Font.PLAIN, 14); // variavel para setar fontes nos campos formatados
-    private final Font fonteTabela = new Font("JetBrains Mono", Font.PLAIN, 12); // variavel para setar fontes nos campos formatados
+    private final Font fonteTabela = new Font("JetBrains Mono", Font.PLAIN, 12); // variavel para setar fontes da tabela
+    private List<Agendamento> agendamentosFiltrados = new ArrayList<>(); // lista para armazenar os agendamentos filtrados para pesquisa
 
     public CadastroAgendamento() {
         initComponents();
 
+        // setando as fontes para os campos e para a tabela
         campoCliente.setFont(fontePadrao);
         campoFuncionario.setFont(fontePadrao);
         campoServico.setFont(fontePadrao);
@@ -41,7 +43,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         tabelaAgendamento.setFont(fonteTabela);
 
         // Habilitar os botões
-        configurarBotoes(true, true, false, true, false, false);
+        configurarBotoes(true, false, true, false, true, false, false);
 
         // Desabilitando os campos
         configurarCampos(false, false, false, false, false);
@@ -85,9 +87,15 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     // Método para carregar a tabela na interface
     public void carregarTabelaAgendamentos() {
+        // Ordena a lista de agendamentos com base no horário de início
+        List<Agendamento> agendamentosOrdenados = new ArrayList<>(Agendamentos); // Cria uma cópia da lista
+        agendamentosOrdenados.sort(Comparator.comparing(Agendamento::getHoraInicio)); // Ordena pela hora de início
+
+        // Cria o modelo da tabela
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Cliente", "Funcionario", "Serviço", "Data", "Horário"}, 0);
 
-        for (Agendamento agendamento : Agendamentos) {
+        // Preenche a tabela com os agendamentos ordenados
+        for (Agendamento agendamento : agendamentosOrdenados) {
             Object linha[] = new Object[]{
                 agendamento.getCliente(),
                 agendamento.getFuncionario(),
@@ -100,6 +108,40 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         tabelaAgendamento.setModel(modelo);
     }
 
+    // Método para carregar a tabela filtrada de acordo com a pesquisa
+    private void carregarTabelaModoPesquisa(List<Agendamento> agendamentos) {
+        // Ordena a lista de agendamentos filtrados por hora de início
+        agendamentos.sort(Comparator.comparing(Agendamento::getHoraInicio)); // Ordena pela hora de início
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaAgendamento.getModel();
+        modelo.setRowCount(0); // Limpa a tabela antes de adicionar os novos dados
+
+        // Preenche a tabela com os agendamentos ordenados
+        for (Agendamento agendamento : agendamentos) {
+            modelo.addRow(new Object[]{
+                agendamento.getCliente().getNome(), // Nome do Cliente
+                agendamento.getFuncionario().getNome(), // Nome do Funcionário
+                agendamento.getServico().getNome(), // Nome do Serviço
+                agendamento.getData().format(formatter), // Data formatada
+                agendamento.getHoraInicio() // Hora de início
+            });
+        }
+    }
+
+    // Método para filtrar os agendamentos por Clientes para a pesquisa
+    private List<Agendamento> filtrarAgendamentosPorCliente(Cliente cliente) {
+        List<Agendamento> agendamentosCliente = new ArrayList<>();
+
+        // Aqui você faz a filtragem dos agendamentos com base no cliente
+        for (Agendamento agendamento : Agendamentos) {
+            if (agendamento.getCliente().equals(cliente)) {
+                agendamentosCliente.add(agendamento);
+            }
+        }
+
+        return agendamentosCliente;
+    }
+
     // Método para limpar os campos
     private void limparCampos() {
         campoCliente.setSelectedItem(null);
@@ -110,8 +152,9 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     }
 
     // Método para habilitar/desabilitar campos e botões
-    private void configurarBotoes(boolean voltar, boolean novo, boolean alterar, boolean pesquisar, boolean excluir, boolean salvar) {
+    private void configurarBotoes(boolean voltar, boolean buscar, boolean novo, boolean alterar, boolean pesquisar, boolean excluir, boolean salvar) {
         botaoVoltar.setEnabled(voltar);
+        botaoBuscar.setEnabled(buscar);
         botaoNovo.setEnabled(novo);
         botaoAlterar.setEnabled(alterar);
         botaoPesquisar.setEnabled(pesquisar);
@@ -158,16 +201,21 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         }
     }
 
-    // Método que obtem o agendamento selecionado para ser usado no evento de salvar
+    // Método que obtem o agendamento selecionado 
     private Agendamento obterAgendamentoSelecionado() {
         // Obtém o índice da linha selecionada na tabela de agendamentos
         int index = tabelaAgendamento.getSelectedRow();
 
         // Verifica se o índice selecionado é válido (maior ou igual a 0 e menor que o número total de linhas)
-        if (index >= 0 && index < tabelaAgendamento.getRowCount()) {
-            // Aqui você busca o agendamento correspondente na lista de agendamentos
-            Agendamento agendamentoSelecionado = Agendamentos.get(index);
-            return agendamentoSelecionado;
+        if (index >= 0) {
+            // Se a lista filtrada não estiver vazia, usamos a lista filtrada
+            List<Agendamento> listaDeAgendamentos = agendamentosFiltrados.isEmpty() ? Agendamentos : agendamentosFiltrados;
+
+            // Verifica se o índice é válido para a lista escolhida
+            if (index < listaDeAgendamentos.size()) {
+                Agendamento agendamentoSelecionado = listaDeAgendamentos.get(index);
+                return agendamentoSelecionado;
+            }
         }
         return null; // Se não houver agendamento selecionado ou índice inválido
     }
@@ -286,21 +334,16 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         carregarFuncionarios();
         carregarServicos();
         configurarCampos(true, true, true, true, true); // Todos os campos habilitados
-        configurarBotoes(true, true, false, true, false, true);
+        configurarBotoes(true, false, true, false, true, false, true);
         limparCampos();
         campoCliente.requestFocus();
-    }
-
-    // Método para configurar a interface para o modo de pesquisa
-    private void configurarModoPesquisa() {
-
     }
 
     // Método para configurar a interface para o modo de salvar
     private void configurarModoSalvar() {
         carregarTabelaAgendamentos();
         configurarCampos(false, false, false, false, false);
-        configurarBotoes(true, true, false, true, false, false);
+        configurarBotoes(true, false, true, false, true, false, false);
         limparCampos();
         campoCliente.requestFocus();
     }
@@ -309,8 +352,24 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     private void configurarModoExcluir() {
         carregarTabelaAgendamentos();
         configurarCampos(false, false, false, false, false);
-        configurarBotoes(true, true, false, true, false, false);
+        configurarBotoes(true, false, true, false, true, false, false);
         limparCampos();
+    }
+
+    // Método para configurar a interface para o modo de pesquisa
+    private void configurarModoPesquisa() {
+        configurarCampos(true, false, false, false, false);
+        configurarBotoes(true, true, false, false, false, false, false);
+        limparCampos();
+    }
+
+    // Método para configurar a interface para o modo de alteraçao
+    private void configurarModoAlteracao() {
+        criandoNovoAgendamento = false;
+        botao = "alterar"; // Define o estado do botão como "alterar"
+        configurarCampos(false, true, true, true, true); // Todos os campos habilitados
+        configurarBotoes(true, false, true, false, true, false, true);
+        campoCliente.requestFocus();
     }
 
     @SuppressWarnings("unchecked")
@@ -328,6 +387,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         botaoPesquisar = new javax.swing.JButton();
         botaoExcluir = new javax.swing.JButton();
         botaoSalvar = new javax.swing.JButton();
+        botaoBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaAgendamento = new javax.swing.JTable();
         cadastroAgendamento = new javax.swing.JLabel();
@@ -359,9 +419,10 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         campoFuncionario.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
         campoFuncionario.setModel(new javax.swing.DefaultComboBoxModel<>());
         campoFuncionario.setBorder(null);
-        campoFuncionario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                atualizarHorariosDisponiveis();
+        campoFuncionario.addActionListener(e -> {
+            // Só habilita o campoHorario se a busca não estiver ativa
+            if (criandoNovoAgendamento) {
+                atualizarHorariosDisponiveis();  // Habilita campoHorario
             }
         });
         getContentPane().add(campoFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, 290, 40));
@@ -370,9 +431,10 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         campoServico.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
         campoServico.setModel(new javax.swing.DefaultComboBoxModel<>());
         campoServico.setBorder(null);
-        campoServico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                atualizarHorariosDisponiveis();
+        campoServico.addActionListener(e -> {
+            // Só habilita o campoHorario se a busca não estiver ativa
+            if (criandoNovoAgendamento) {
+                atualizarHorariosDisponiveis();  // Habilita campoHorario
             }
         });
         getContentPane().add(campoServico, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 290, 40));
@@ -386,7 +448,10 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
         campoData.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                atualizarHorariosDisponiveis();
+                // Só atualiza os horários se a busca não estiver ativa
+                if (criandoNovoAgendamento) {
+                    atualizarHorariosDisponiveis();  // Habilita campoHorario
+                }
             }
         });
         getContentPane().add(campoData, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, 290, 40));
@@ -452,6 +517,17 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         });
         getContentPane().add(botaoSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 650, 140, 30));
 
+        botaoBuscar.setBorder(null);
+        botaoBuscar.setBorderPainted(false);
+        botaoBuscar.setContentAreaFilled(false);
+        botaoBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoBuscarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(botaoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 120, 80, 40));
+
         tabelaAgendamento.setBackground(new java.awt.Color(238, 238, 238));
         tabelaAgendamento.setFont(new java.awt.Font("JetBrains Mono", 0, 12)); // NOI18N
         tabelaAgendamento.setModel(new javax.swing.table.DefaultTableModel(
@@ -486,6 +562,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoVoltarActionPerformed
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
+        criandoNovoAgendamento = true;
         configurarModoNovo();
     }//GEN-LAST:event_botaoNovoActionPerformed
 
@@ -521,9 +598,9 @@ public class CadastroAgendamento extends javax.swing.JFrame {
             Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
             boolean ehAlteracao = botao.equals("alterar");
 
-            // Verifica conflitos se estamos salvando (caso de alteração)
+            // Verifica conflitos de horário
             if (ehAlteracao) {
-                // Verifica se o horário está disponível para o funcionário
+                // Se for alteração, verifica se o horário está disponível para o funcionário
                 if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), agendamentoSelecionado, true)) {
                     JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -536,7 +613,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
                 }
             }
 
-            // Operação de salvar
+            // Confirmação do agendamento
             int confirmacao = JOptionPane.showConfirmDialog(
                     null,
                     "Tem certeza de que deseja salvar este agendamento?",
@@ -563,6 +640,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
                 }
             }
 
+            // Atualiza a tabela com os novos dados
             carregarTabelaAgendamentos();
             limparCampos();
             configurarModoSalvar();
@@ -574,50 +652,59 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     private void tabelaAgendamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAgendamentoMouseClicked
-        linhaSelecionada = tabelaAgendamento.getSelectedRow();
+        // Obtém a linha selecionada na tabela
+        int linhaSelecionada = tabelaAgendamento.getSelectedRow();
 
+        // Verifica se a linha selecionada é válida
         if (linhaSelecionada >= 0) {
-            Agendamento agendamentoSelecionado = Agendamentos.get(linhaSelecionada);
+            // Usamos a lista filtrada de agendamentos, caso a busca tenha sido realizada
+            List<Agendamento> listaAgendamentos = agendamentosFiltrados.isEmpty() ? Agendamentos : agendamentosFiltrados;
 
-            campoCliente.setSelectedItem(agendamentoSelecionado.getCliente());
-            campoFuncionario.setSelectedItem(agendamentoSelecionado.getFuncionario());
-            campoServico.setSelectedItem(agendamentoSelecionado.getServico());
-            campoData.setValue(Date.from(agendamentoSelecionado.getData()
-                    .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            // Verifica se o índice é válido para a lista escolhida
+            if (linhaSelecionada < listaAgendamentos.size()) {
+                // Obtém o agendamento correspondente da lista
+                Agendamento agendamentoSelecionado = listaAgendamentos.get(linhaSelecionada);
 
-            LocalTime horaSelecionada = agendamentoSelecionado.getHoraInicio();
+                // Preenche os campos com os dados do agendamento selecionado
+                campoCliente.setSelectedItem(agendamentoSelecionado.getCliente());
+                campoFuncionario.setSelectedItem(agendamentoSelecionado.getFuncionario());
+                campoServico.setSelectedItem(agendamentoSelecionado.getServico());
+                campoData.setValue(java.sql.Date.valueOf(agendamentoSelecionado.getData()));
 
-            // Verifica se o horário já está no ComboBox e seleciona
-            boolean horarioEncontrado = false;
-            for (int i = 0; i < campoHorario.getItemCount(); i++) {
-                if (campoHorario.getItemAt(i).equals(horaSelecionada)) {
-                    campoHorario.setSelectedIndex(i);
-                    horarioEncontrado = true;
-                    break;
+                // Obtém horários disponíveis para o funcionário e o dia selecionados
+                List<LocalTime> horariosDisponiveis = obterHorariosDisponiveis(
+                        agendamentoSelecionado.getFuncionario(),
+                        agendamentoSelecionado.getData(),
+                        agendamentoSelecionado.getServico().getDuracao()
+                );
+
+                // Inclui o horário original do agendamento no início da lista de horários
+                if (!horariosDisponiveis.contains(agendamentoSelecionado.getHoraInicio())) {
+                    horariosDisponiveis.add(0, agendamentoSelecionado.getHoraInicio());
                 }
+
+                // Ordena os horários para manter a lista consistente
+                horariosDisponiveis.sort(Comparator.naturalOrder());
+
+                // Atualiza o campo de horário com os horários disponíveis
+                campoHorario.setModel(new DefaultComboBoxModel<>(horariosDisponiveis.toArray(LocalTime[]::new)));
+                campoHorario.setSelectedItem(agendamentoSelecionado.getHoraInicio());
             }
 
-            // Adiciona dinamicamente caso não esteja presente
-            if (!horarioEncontrado) {
-                campoHorario.addItem(horaSelecionada);
-                campoHorario.setSelectedItem(horaSelecionada);
-            }
         }
 
-        configurarBotoes(true, true, true, true, true, false);
+        configurarBotoes(true, false, true, true, true, true, false);
         configurarCampos(false, false, false, false, false);
     }//GEN-LAST:event_tabelaAgendamentoMouseClicked
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
-        botao = "alterar";
-        configurarCampos(false, true, true, true, true); // Todos os campos habilitados
-        configurarBotoes(true, true, false, true, false, true);
-        campoCliente.requestFocus();
+        configurarModoAlteracao();
 
+        // Obtém o agendamento selecionado através do método auxiliar
         Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
 
         if (agendamentoSelecionado != null) {
-            // Preenche os campos com os dados do agendamento atual
+            // Preenche os campos com os dados do agendamento selecionado
             campoCliente.setSelectedItem(agendamentoSelecionado.getCliente());
             campoFuncionario.setSelectedItem(agendamentoSelecionado.getFuncionario());
             campoServico.setSelectedItem(agendamentoSelecionado.getServico());
@@ -630,7 +717,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
                     agendamentoSelecionado.getServico().getDuracao()
             );
 
-            // Inclui o horário original do agendamento no início da lista
+            // Inclui o horário original do agendamento no início da lista de horários
             if (!horariosDisponiveis.contains(agendamentoSelecionado.getHoraInicio())) {
                 horariosDisponiveis.add(0, agendamentoSelecionado.getHoraInicio());
             }
@@ -642,6 +729,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
             campoHorario.setModel(new DefaultComboBoxModel<>(horariosDisponiveis.toArray(LocalTime[]::new)));
             campoHorario.setSelectedItem(agendamentoSelecionado.getHoraInicio());
         } else {
+            // Caso nenhum agendamento tenha sido selecionado
             JOptionPane.showMessageDialog(null, "Nenhum agendamento selecionado!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoAlterarActionPerformed
@@ -657,11 +745,20 @@ public class CadastroAgendamento extends javax.swing.JFrame {
                     "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
 
             if (confirmacao == JOptionPane.YES_OPTION) {
-                // Remove o agendamento da lista
+                // Remove o agendamento da lista geral
                 Agendamento.getAgendamentos().remove(agendamentoSelecionado);
 
+                // Verifica se a lista filtrada está em uso e remove da mesma
+                if (!agendamentosFiltrados.isEmpty()) {
+                    agendamentosFiltrados.remove(agendamentoSelecionado);
+                }
+
+                // Exibe a mensagem de sucesso
                 JOptionPane.showMessageDialog(this,
                         "Agendamento excluído com sucesso!");
+
+                // Recarrega a tabela com os agendamentos atualizados
+                carregarTabelaAgendamentos();
             }
         } else {
             JOptionPane.showMessageDialog(this,
@@ -669,12 +766,35 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         }
 
         configurarModoExcluir();
+
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void botaoPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarActionPerformed
-        
+        configurarModoPesquisa();
 
     }//GEN-LAST:event_botaoPesquisarActionPerformed
+
+    private void botaoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarActionPerformed
+        // Desabilita o comboBox e o botão "Buscar" após a pesquisa
+        campoCliente.setEnabled(false);
+        configurarBotoes(true, false, true, false, true, false, false);
+
+        // Obtém o cliente selecionado no comboBox
+        Cliente clienteSelecionado = (Cliente) campoCliente.getSelectedItem();
+
+        if (clienteSelecionado != null) {
+            // Filtra os agendamentos desse cliente
+            List<Agendamento> agendamentosCliente = filtrarAgendamentosPorCliente(clienteSelecionado);
+
+            // Atualiza a tabela com os agendamentos filtrados
+            carregarTabelaModoPesquisa(agendamentosCliente);
+
+            // Armazena a lista filtrada para referência futura
+            agendamentosFiltrados = agendamentosCliente;
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente para buscar!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_botaoBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -713,6 +833,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAlterar;
+    private javax.swing.JButton botaoBuscar;
     private javax.swing.JButton botaoExcluir;
     private javax.swing.JButton botaoNovo;
     private javax.swing.JButton botaoPesquisar;

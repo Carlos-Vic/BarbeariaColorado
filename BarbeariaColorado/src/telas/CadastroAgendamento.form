@@ -92,7 +92,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="campoFuncionario.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        atualizarHorariosDisponiveis();&#xa;    }&#xa;});"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="campoFuncionario.addActionListener(e -&gt; {&#xa;    // S&#xf3; habilita o campoHorario se a busca n&#xe3;o estiver ativa&#xa;    if (criandoNovoAgendamento) {&#xa;        atualizarHorariosDisponiveis();  // Habilita campoHorario&#xa;    }&#xa;});"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Funcionario&gt;"/>
       </AuxValues>
       <Constraints>
@@ -117,7 +117,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="campoServico.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        atualizarHorariosDisponiveis();&#xa;    }&#xa;});"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="campoServico.addActionListener(e -&gt; {&#xa;    // S&#xf3; habilita o campoHorario se a busca n&#xe3;o estiver ativa&#xa;    if (criandoNovoAgendamento) {&#xa;        atualizarHorariosDisponiveis();  // Habilita campoHorario&#xa;    }&#xa;});"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Servico&gt;"/>
       </AuxValues>
       <Constraints>
@@ -133,7 +133,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="JSpinner.DateEditor editor = new JSpinner.DateEditor(campoData, &quot;dd/MM/yyyy&quot;);&#xa;campoData.setEditor(editor);&#xa;&#xa;campoData.setBorder(null);&#xa;campoData.setBackground(new java.awt.Color(238, 238, 238));&#xa;&#xa;campoData.addChangeListener(new javax.swing.event.ChangeListener() {&#xa;    public void stateChanged(javax.swing.event.ChangeEvent evt) {&#xa;        atualizarHorariosDisponiveis();&#xa;    }&#xa;});"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="JSpinner.DateEditor editor = new JSpinner.DateEditor(campoData, &quot;dd/MM/yyyy&quot;);&#xa;campoData.setEditor(editor);&#xa;&#xa;campoData.setBorder(null);&#xa;campoData.setBackground(new java.awt.Color(238, 238, 238));&#xa;&#xa;campoData.addChangeListener(new javax.swing.event.ChangeListener() {&#xa;    public void stateChanged(javax.swing.event.ChangeEvent evt) {&#xa;        // S&#xf3; atualiza os hor&#xe1;rios se a busca n&#xe3;o estiver ativa&#xa;        if (criandoNovoAgendamento) {&#xa;            atualizarHorariosDisponiveis();  // Habilita campoHorario&#xa;        }&#xa;    }&#xa;});"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -262,6 +262,26 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="1050" y="650" width="140" height="30"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JButton" name="botaoBuscar">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="null"/>
+        </Property>
+        <Property name="borderPainted" type="boolean" value="false"/>
+        <Property name="contentAreaFilled" type="boolean" value="false"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Hand Cursor"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoBuscarActionPerformed"/>
+      </Events>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="370" y="120" width="80" height="40"/>
         </Constraint>
       </Constraints>
     </Component>
