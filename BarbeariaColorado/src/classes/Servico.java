@@ -9,7 +9,7 @@ public enum Servico {
     HIDRATACAO("Hidratação", 40, 30);
 
     private final String nome; // Nome do serviço (para exibição no combobox)
-    private final int preco;   // Preço do serviço
+    private final double preco;   // Preço do serviço
     private final int duracao; // Duração do serviço em minutos
 
     // Construtor
@@ -24,7 +24,7 @@ public enum Servico {
         return nome;
     }
 
-    public int getPreco() {
+    public double getPreco() {
         return preco;
     }
 
