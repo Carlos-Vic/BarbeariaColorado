@@ -610,7 +610,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
         botao = "alterar";
-        configurarCampos(true, true, true, true, true); // Todos os campos habilitados
+        configurarCampos(false, true, true, true, true); // Todos os campos habilitados
         configurarBotoes(true, true, false, true, false, true);
         campoCliente.requestFocus();
 
@@ -672,7 +672,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     private void botaoPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarActionPerformed
-
+        
 
     }//GEN-LAST:event_botaoPesquisarActionPerformed
 
