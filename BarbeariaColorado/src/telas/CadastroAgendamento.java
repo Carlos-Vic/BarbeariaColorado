@@ -44,7 +44,36 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     }
 
-    // Método para carregar a tabela na interface
+    private void atualizarHorariosDisponiveis() {
+        try {
+            // Obtém os valores dos campos
+            Funcionario funcionarioSelecionado = (Funcionario) campoFuncionario.getSelectedItem();
+            Servico servicoSelecionado = (Servico) campoServico.getSelectedItem();
+            Date dataSelecionada = (Date) campoData.getValue();
+
+            // Verifica se todos os campos estão preenchidos
+            if (funcionarioSelecionado != null && servicoSelecionado != null && dataSelecionada != null) {
+                // Converte a data para LocalDate
+                LocalDate localDate = dataSelecionada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                // Habilita o campo de horários
+                campoHorario.setEnabled(true);
+
+                // Carrega os horários disponíveis
+                carregarHorariosDisponiveis(funcionarioSelecionado, localDate);
+            } else {
+                // Desabilita o campo de horários se algum campo não estiver preenchido
+                campoHorario.setEnabled(false);
+                campoHorario.removeAllItems(); // Limpa os itens da ComboBox de horários
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            campoHorario.setEnabled(false); // Desabilita a ComboBox de horários em caso de erro
+            campoHorario.removeAllItems(); // Limpa os itens da ComboBox de horários
+        }
+    }
+
+// Método para carregar a tabela na interface
     public void carregarTabelaAgendamentos() {
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Cliente", "Funcionario", "Serviço", "Data", "Horário"}, 0);
 
@@ -132,7 +161,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         return null; // Se não houver agendamento selecionado ou índice inválido
     }
 
-    // Método para carregar os horários disponíveis na ComboBox (vai no actionPerformed do campoFuncionario)
+// Método para carregar os horários disponíveis na ComboBox (vai no actionPerformed do campoFuncionario)
     private void carregarHorariosDisponiveis(Funcionario funcionario, LocalDate data) {
         // Limpa os itens da ComboBox de horários
         campoHorario.removeAllItems();
@@ -300,44 +329,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         campoFuncionario.setBorder(null);
         campoFuncionario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    // Obtém o funcionário selecionado
-                    Funcionario funcionarioSelecionado = (Funcionario) campoFuncionario.getSelectedItem();
-                    //System.out.println("Funcionário selecionado: " + funcionarioSelecionado);
-
-                    // Obtém a data selecionada do JSpinner (que é um tipo Date)
-                    Date dataSelecionada = (Date) campoData.getValue();
-                    //System.out.println("Data selecionada: " + dataSelecionada);
-                    LocalDate localDate = null;
-                    if (dataSelecionada != null) {
-                        localDate = dataSelecionada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                        //System.out.println("Data convertida para LocalDate: " + localDate);
-                    }
-
-                    // Verifica o serviço selecionado
-                    Servico servicoSelecionado = (Servico) campoServico.getSelectedItem();
-                    //System.out.println("Serviço selecionado: " + servicoSelecionado);
-
-                    // Verifica se todos os campos estão selecionados
-                    if (funcionarioSelecionado != null && localDate != null && servicoSelecionado != null) {
-                        //System.out.println("Todos os campos selecionados, habilitando horário...");
-
-                        // Habilita a ComboBox de horários
-                        campoHorario.setEnabled(true);
-
-                        // Chama o método para carregar os horários, passando o funcionário e a data
-                        carregarHorariosDisponiveis(funcionarioSelecionado, localDate);
-                    } else {
-                        //System.out.println("Algum campo não foi selecionado, desabilitando horário...");
-                        campoHorario.setEnabled(false); // Desabilita a ComboBox de horários se algum item não for selecionado
-                        campoHorario.removeAllItems(); // Limpa os itens da ComboBox de horários
-                    }
-                } catch (Exception e) {
-                    //System.err.println("Erro ao processar a seleção do funcionário: " + e.getMessage());
-                    e.printStackTrace();
-                    campoHorario.setEnabled(false); // Desabilita a ComboBox de horários em caso de erro
-                    campoHorario.removeAllItems(); // Limpa os itens da ComboBox de horários
-                }
+                atualizarHorariosDisponiveis();
             }
         });
         getContentPane().add(campoFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, 290, 40));
@@ -347,35 +339,8 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         campoServico.setModel(new javax.swing.DefaultComboBoxModel<>());
         campoServico.setBorder(null);
         campoServico.addActionListener(new java.awt.event.ActionListener() {
-            Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Obtém o funcionário selecionado
-                Funcionario funcionarioSelecionado = (Funcionario) campoFuncionario.getSelectedItem();
-                //System.out.println("Funcionário selecionado: " + funcionarioSelecionado);
-
-                // Obtém a data selecionada do JSpinner
-                Date dataSelecionada = (Date) campoData.getValue();
-                //System.out.println("Data selecionada: " + dataSelecionada);
-                LocalDate localDate = dataSelecionada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                //System.out.println("Data convertida para LocalDate: " + localDate);
-
-                // Verifica o serviço selecionado
-                Servico servicoSelecionado = (Servico) campoServico.getSelectedItem();
-                //System.out.println("Serviço selecionado: " + servicoSelecionado);
-
-                // Verifica se todos os campos estão selecionados
-                if (funcionarioSelecionado != null && localDate != null && servicoSelecionado != null) {
-                    //System.out.println("Todos os campos selecionados, habilitando horário...");
-
-                    // Habilita a ComboBox de horários
-                    campoHorario.setEnabled(true);
-
-                    // Chama o método para carregar os horários, passando o funcionário e a data
-                    carregarHorariosDisponiveis(funcionarioSelecionado, localDate);
-                } else {
-                    //System.out.println("Algum campo não foi selecionado, desabilitando horário...");
-                    campoHorario.setEnabled(false); // Desabilita a ComboBox de horários
-                }
+                atualizarHorariosDisponiveis();
             }
         });
         getContentPane().add(campoServico, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 290, 40));
@@ -389,33 +354,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
         campoData.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                // Obtém a data selecionada do JSpinner
-                Date dataSelecionada = (Date) campoData.getValue();
-                //System.out.println("Data selecionada: " + dataSelecionada);
-                LocalDate localDate = dataSelecionada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                //System.out.println("Data convertida para LocalDate: " + localDate);
-
-                // Obtém o funcionário selecionado
-                Funcionario funcionarioSelecionado = (Funcionario) campoFuncionario.getSelectedItem();
-                //System.out.println("Funcionário selecionado: " + funcionarioSelecionado);
-
-                // Verifica o serviço selecionado
-                Servico servicoSelecionado = (Servico) campoServico.getSelectedItem();
-                //System.out.println("Serviço selecionado: " + servicoSelecionado);
-
-                // Verifica se todos os campos estão selecionados
-                if (funcionarioSelecionado != null && localDate != null && servicoSelecionado != null) {
-                    //System.out.println("Todos os campos selecionados, habilitando horário...");
-
-                    // Habilita a ComboBox de horários
-                    campoHorario.setEnabled(true);
-
-                    // Chama o método para carregar os horários, passando o funcionário e a data
-                    carregarHorariosDisponiveis(funcionarioSelecionado, localDate);
-                } else {
-                    //System.out.println("Algum campo não foi selecionado, desabilitando horário...");
-                    campoHorario.setEnabled(false); // Desabilita a ComboBox de horários
-                }
+                atualizarHorariosDisponiveis();
             }
         });
         getContentPane().add(campoData, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, 290, 40));
@@ -520,81 +459,99 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
             campoCliente.requestFocus();
-        } else {
-            Cliente cliente = (Cliente) campoCliente.getSelectedItem();
-            Funcionario funcionario = (Funcionario) campoFuncionario.getSelectedItem();
-            Servico servico = (Servico) campoServico.getSelectedItem();
+            return; // Sai do método para evitar execução adicional
+        }
 
-            // Converte o valor de campoData (java.util.Date) para LocalDate
-            java.util.Date dataUtil = (java.util.Date) campoData.getValue(); // campoData pode retornar um java.util.Date
-            LocalDate data = dataUtil.toInstant()
-                    .atZone(java.time.ZoneId.systemDefault())
-                    .toLocalDate(); // Converte para LocalDate
+        // Obtém os valores dos campos
+        Cliente cliente = (Cliente) campoCliente.getSelectedItem();
+        Funcionario funcionario = (Funcionario) campoFuncionario.getSelectedItem();
+        Servico servico = (Servico) campoServico.getSelectedItem();
 
-            LocalTime horaInicio = (LocalTime) campoHorario.getSelectedItem();
+        // Converte o valor de campoData (java.util.Date) para LocalDate
+        java.util.Date dataUtil = (java.util.Date) campoData.getValue(); // campoData pode retornar um java.util.Date
+        LocalDate data = dataUtil.toInstant()
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate(); // Converte para LocalDate
 
-            // Valida a data (não pode ser anterior à data atual)
-            try {
-                if (data.isBefore(LocalDate.now())) {
-                    throw new IllegalArgumentException("A data do agendamento não pode ser anterior à data atual!");
-                }
-            } catch (IllegalArgumentException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                campoData.requestFocus();
-                return;
+        LocalTime horaInicio = (LocalTime) campoHorario.getSelectedItem();
+
+        // Valida a data (não pode ser anterior à data atual)
+        try {
+            if (data.isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("A data do agendamento não pode ser anterior à data atual!");
             }
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            campoData.requestFocus();
+            return; // Sai do método para evitar execução adicional
+        }
 
-            int confirmacao;
-            if (botao.equals("novo")) {
+        // Verifica se estamos alterando um agendamento existente
+        Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
+        boolean ehAlteracao = (agendamentoSelecionado != null);
+
+        // Verifica a disponibilidade do horário
+        if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), agendamentoSelecionado, ehAlteracao)) {
+            JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return; // Sai do método para evitar execução adicional
+        }
+
+        int confirmacao;
+        if (botao.equals("novo")) {
+            confirmacao = JOptionPane.showConfirmDialog(
+                    null,
+                    "Tem certeza de que deseja cadastrar este agendamento?",
+                    "Confirmação",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                // Criação do novo agendamento
+                Agendamento agendamento = new Agendamento(cliente, funcionario, servico, data, horaInicio);
+                Agendamentos.add(agendamento);
+                JOptionPane.showMessageDialog(null, "Agendamento cadastrado com sucesso", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+            }
+        } else if (botao.equals("alterar")) {
+            if (linhaSelecionada >= 0) {
+                // Confirmação de alteração
                 confirmacao = JOptionPane.showConfirmDialog(
-                        null,
-                        "Tem certeza de que deseja cadastrar este agendamento?",
-                        "Confirmação",
-                        JOptionPane.YES_NO_OPTION,
+                        null, "Tem certeza de que deseja alterar este agendamento?",
+                        "Confirmação", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 );
 
                 if (confirmacao == JOptionPane.YES_OPTION) {
-                    // Criação do novo agendamento
-                    Agendamento agendamento = new Agendamento(cliente, funcionario, servico, data, horaInicio);
-                    Agendamentos.add(agendamento);
-                    JOptionPane.showMessageDialog(null, "Agendamento cadastrado com sucesso", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                    // Acessa o agendamento selecionado na lista
+                    agendamentoSelecionado = Agendamentos.get(linhaSelecionada);
+
+                    // Atualiza os dados do agendamento com os valores dos campos
+                    agendamentoSelecionado.setCliente(cliente);
+                    agendamentoSelecionado.setFuncionario(funcionario);
+                    agendamentoSelecionado.setServico(servico);
+                    agendamentoSelecionado.setData(data);
+                    agendamentoSelecionado.setHoraInicio(horaInicio);
+
+                    // Mostra mensagem de sucesso
+                    JOptionPane.showMessageDialog(null, "Agendamento alterado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+
+                    // Atualiza a tabela com os novos dados
+                    carregarTabelaAgendamentos();
                 }
-            } else if (botao.equals("alterar")) {
-                if (linhaSelecionada >= 0) {
-                    // Confirmação de alteração
-                    confirmacao = JOptionPane.showConfirmDialog(
-                            null, "Tem certeza de que deseja alterar este agendamento?",
-                            "Confirmação", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE
-                    );
-
-                    if (confirmacao == JOptionPane.YES_OPTION) {
-                        // Acessa o agendamento selecionado na lista
-                        Agendamento agendamentoSelecionado = Agendamentos.get(linhaSelecionada);
-
-                        // Atualiza os dados do agendamento com os valores dos campos
-                        agendamentoSelecionado.setCliente(cliente);
-                        agendamentoSelecionado.setFuncionario(funcionario);
-                        agendamentoSelecionado.setServico(servico);
-                        agendamentoSelecionado.setData(data);
-                        agendamentoSelecionado.setHoraInicio(horaInicio);
-
-                        // Mostra mensagem de sucesso
-                        JOptionPane.showMessageDialog(null, "Agendamento alterado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
-
-                        // Atualiza a tabela com os novos dados
-                        carregarTabelaAgendamentos();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum agendamento selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhum agendamento selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
             }
-
         }
-        configurarModoSalvar();
 
+        // Atualiza a tabela de agendamentos
+        carregarTabelaAgendamentos();
+
+        // Limpa os campos após o salvamento
+        limparCampos();
+
+        // Configura o modo de salvar
+        configurarModoSalvar();
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     private void tabelaAgendamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAgendamentoMouseClicked
@@ -637,57 +594,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
-        int index = tabelaAgendamento.getSelectedRow();  // Obtém a linha selecionada na tabela de agendamentos
 
-        if (index >= 0 && index < tabelaAgendamento.getRowCount()) {  // Verifica se o índice é válido
-            Agendamento agendamentoSelecionado = Agendamentos.get(index);
-
-            Cliente cliente = agendamentoSelecionado.getCliente();
-            Funcionario funcionario = agendamentoSelecionado.getFuncionario();
-            Servico servico = agendamentoSelecionado.getServico();
-            LocalDate data = agendamentoSelecionado.getData();
-            LocalTime horario = agendamentoSelecionado.getHoraFim();
-
-            // Encontre o agendamento correspondente na lista 'Agendamentos' com base nos dados obtidos
-            Agendamento agendamentoParaExcluir = null;
-            for (Agendamento agendamento : Agendamentos) {
-                if (agendamento.getCliente().getNome().equals(cliente)
-                        && agendamento.getFuncionario().getNome().equals(funcionario)
-                        && agendamento.getServico().getNome().equals(servico)
-                        && agendamento.getData().equals(data)
-                        && agendamento.getHoraInicio().equals(horario)) {
-
-                    agendamentoParaExcluir = agendamento;
-                    break;
-                }
-            }
-
-            if (agendamentoParaExcluir != null) {
-                // Caixa de diálogo para confirmação de exclusão
-                int confirmacao = JOptionPane.showConfirmDialog(
-                        null,
-                        "Tem certeza de que deseja excluir este agendamento?",
-                        "Confirmação",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                );
-
-                if (confirmacao == JOptionPane.YES_OPTION) {
-                    // Remove o agendamento da lista
-                    Agendamentos.remove(agendamentoParaExcluir);
-                    configurarModoExcluir();       // Configura a interface para o modo de exclusão
-
-                    // Exibe uma mensagem de sucesso
-                    JOptionPane.showMessageDialog(null, "Agendamento excluído", "Mensagem", JOptionPane.PLAIN_MESSAGE);
-                }
-            } else {
-                // Caso não encontre o agendamento correspondente
-                JOptionPane.showMessageDialog(null, "Agendamento não encontrado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            }
-        } else {
-            // Caso não haja nenhum agendamento selecionado
-            JOptionPane.showMessageDialog(null, "Nenhum agendamento selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_botaoExcluirActionPerformed
 
     /**
