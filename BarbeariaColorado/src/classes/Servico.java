@@ -5,7 +5,7 @@ public enum Servico {
     CORTE_DEGRADE("Corte Degradê", 40, 30),
     BARBA("Barba", 30, 30),
     SOBRANCELHA("Sobrancelha", 20, 30),
-    PINTAR_CABELO("Pintar Cabelo", 100, 60),
+    PINTAR_CABELO("Pintar Cabelo", 100, 30),
     HIDRATACAO("Hidratação", 40, 30);
 
     private final String nome; // Nome do serviço (para exibição no combobox)

@@ -48,6 +48,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     }
 
+    // Método para habilitar o campoHorario somente quando selecionar os campos de funcionario, data, serviço
     private void atualizarHorariosDisponiveis() {
         try {
             // Obtém os valores dos campos
@@ -82,7 +83,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         }
     }
 
-// Método para carregar a tabela na interface
+    // Método para carregar a tabela na interface
     public void carregarTabelaAgendamentos() {
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Cliente", "Funcionario", "Serviço", "Data", "Horário"}, 0);
 
@@ -157,6 +158,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         }
     }
 
+    // Método que obtem o agendamento selecionado para ser usado no evento de salvar
     private Agendamento obterAgendamentoSelecionado() {
         // Obtém o índice da linha selecionada na tabela de agendamentos
         int index = tabelaAgendamento.getSelectedRow();
@@ -170,18 +172,21 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         return null; // Se não houver agendamento selecionado ou índice inválido
     }
 
+    // Método que obtém os agendamentos para um funcionário específico em uma data determinada
     private List<Agendamento> obterAgendamentosParaFuncionario(Funcionario funcionario, LocalDate data) {
-        return Agendamentos.stream()
+        // Filtra a lista de agendamentos para encontrar aqueles que correspondem ao funcionário e a data informados
+        return Agendamento.getAgendamentos().stream()
                 .filter(a -> a.getFuncionario().equals(funcionario) && a.getData().equals(data))
                 .collect(Collectors.toList());
     }
 
+    // Método que obtém os horários disponíveis para agendamento considerando conflitos com a agenda
     private List<LocalTime> obterHorariosDisponiveis(Funcionario funcionario, LocalDate data, int duracaoServico) {
         List<LocalTime> horariosDisponiveis = new ArrayList<>();
         LocalTime inicioExpediente = LocalTime.of(8, 0);  // Início do expediente (08:00)
         LocalTime fimExpediente = LocalTime.of(18, 0);    // Fim do expediente (18:00)
 
-        // Lista de agendamentos existentes para o funcionário na data especificada
+        // Filtra os agendamentos do funcionário para o dia específico
         List<Agendamento> agendamentosDoDia = obterAgendamentosParaFuncionario(funcionario, data);
 
         LocalTime horarioAtual = inicioExpediente;
@@ -191,17 +196,19 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
             boolean horarioConflitante = false;
 
+            // Verifica se algum agendamento para o funcionário específico conflita com esse horário
             for (Agendamento agendamento : agendamentosDoDia) {
                 LocalTime inicioAgendamento = agendamento.getHoraInicio();
                 LocalTime fimAgendamento = inicioAgendamento.plusMinutes(agendamento.getServico().getDuracao());
 
-                // Verifica se há conflito
+                // Verifica se há conflito (ocupação por outro agendamento)
                 if ((horarioAtual.isBefore(fimAgendamento) && horarioAtual.plusMinutes(duracaoServico).isAfter(inicioAgendamento))) {
                     horarioConflitante = true;
                     break;
                 }
             }
 
+            // Se não houver conflito, o horário está disponível
             if (!horarioConflitante) {
                 horariosDisponiveis.add(horarioAtual);
             }
@@ -213,15 +220,15 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         return horariosDisponiveis;
     }
 
-    // Método para carregar os horários disponíveis na ComboBox (vai no actionPerformed do campoFuncionario)
+    // Método para carregar os horários disponíveis na ComboBox
     private void carregarHorariosDisponiveis(Funcionario funcionario, LocalDate data) {
         // Limpa os itens da ComboBox de horários
         campoHorario.removeAllItems();
 
         // Verifica o serviço selecionado e a sua duração
         Servico servicoSelecionado = (Servico) campoServico.getSelectedItem();
-        if (servicoSelecionado == null) {
-            return;
+        if (servicoSelecionado == null || funcionario == null || data == null) {
+            return;  // Se o serviço, o funcionário ou a data não estiverem definidos, retorna sem carregar os horários
         }
 
         int duracaoServico = servicoSelecionado.getDuracao();
@@ -230,10 +237,10 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
         LocalTime horarioOriginal = (agendamentoSelecionado != null) ? agendamentoSelecionado.getHoraInicio() : null;
 
-        // Obtém os horários disponíveis usando o novo método
+        // Obtém os horários disponíveis para o funcionário e a data selecionada
         List<LocalTime> horariosDisponiveis = obterHorariosDisponiveis(funcionario, data, duracaoServico);
 
-        // Se o horário original for válido para o novo serviço, adicione ele à lista de horários
+        // Se o horário original for válido para o novo serviço, adicione-o à lista de horários
         if (horarioOriginal != null) {
             // Verifica se o horário original ainda está disponível para o novo serviço
             boolean horarioDisponivelParaAlteracao = verificarDisponibilidade(
@@ -247,8 +254,8 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
         // Carrega os horários na ComboBox
         for (LocalTime horario : horariosDisponiveis) {
-            // Adiciona os outros horários disponíveis
-            if (!horario.equals(horarioOriginal)) {
+            // Adiciona os outros horários disponíveis, excluindo o horário original, se já foi adicionado
+            if (horarioOriginal == null || !horario.equals(horarioOriginal)) {
                 campoHorario.addItem(horario);
             }
         }
@@ -281,14 +288,6 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         configurarCampos(true, true, true, true, true); // Todos os campos habilitados
         configurarBotoes(true, true, false, true, false, true);
         limparCampos();
-        campoCliente.requestFocus();
-    }
-
-    // Método para configurar a interface para o modo de alteração
-    private void configurarModoAlteracao() {
-        botao = "alterar";
-        configurarCampos(true, true, true, true, true); // Todos os campos habilitados
-        configurarBotoes(true, true, false, true, false, true);
         campoCliente.requestFocus();
     }
 
@@ -424,6 +423,11 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         botaoPesquisar.setBorderPainted(false);
         botaoPesquisar.setContentAreaFilled(false);
         botaoPesquisar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botaoPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPesquisarActionPerformed(evt);
+            }
+        });
         getContentPane().add(botaoPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 650, 150, 30));
 
         botaoExcluir.setBorder(null);
@@ -519,7 +523,14 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
             // Verifica conflitos se estamos salvando (caso de alteração)
             if (ehAlteracao) {
+                // Verifica se o horário está disponível para o funcionário
                 if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), agendamentoSelecionado, true)) {
+                    JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } else {
+                // Se não for alteração, verifica se o horário está disponível para o funcionário
+                if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), null, false)) {
                     JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -536,6 +547,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
             if (confirmacao == JOptionPane.YES_OPTION) {
                 if (botao.equals("novo")) {
+                    // Cria um novo agendamento
                     Agendamento novoAgendamento = new Agendamento(cliente, funcionario, servico, data, horaInicio);
                     Agendamentos.add(novoAgendamento);
                     JOptionPane.showMessageDialog(null, "Agendamento cadastrado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
@@ -635,8 +647,34 @@ public class CadastroAgendamento extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
     private void botaoExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoExcluirActionPerformed
+        // Obtém o agendamento selecionado
+        Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
 
+        if (agendamentoSelecionado != null) {
+            // Confirmação da exclusão
+            int confirmacao = JOptionPane.showConfirmDialog(this,
+                    "Tem certeza que deseja excluir o agendamento selecionado?",
+                    "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                // Remove o agendamento da lista
+                Agendamento.getAgendamentos().remove(agendamentoSelecionado);
+
+                JOptionPane.showMessageDialog(this,
+                        "Agendamento excluído com sucesso!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, selecione um agendamento para excluir.");
+        }
+
+        configurarModoExcluir();
     }//GEN-LAST:event_botaoExcluirActionPerformed
+
+    private void botaoPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisarActionPerformed
+
+
+    }//GEN-LAST:event_botaoPesquisarActionPerformed
 
     /**
      * @param args the command line arguments

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import telas.CadastroAgendamento;
 
 public class Agendamento {
 
@@ -85,29 +86,28 @@ public class Agendamento {
         agendamentos.add(agendamento);
     }
 
-    public static boolean verificarDisponibilidade(Funcionario funcionario, LocalDate data, LocalTime horaInicio, int duracao, Agendamento agendamentoIgnorado, boolean ehAlteracao) {
-        LocalTime horaFim = horaInicio.plusMinutes(duracao);
+    public static boolean verificarDisponibilidade(Funcionario funcionario, LocalDate data, LocalTime horaInicio, int duracaoServico, Agendamento agendamentoSelecionado, boolean ehAlteracao) {
+        // Filtra os agendamentos para o funcionário e data específicos
+        List<Agendamento> agendamentosDoFuncionario = getAgendamentosPorFuncionarioEData(funcionario, data); // Usando o método correto
 
-        for (Agendamento agendamento : agendamentos) {
-            if (agendamentoIgnorado != null && agendamento.equals(agendamentoIgnorado)) {
-                continue;
-            }
+        // Se estamos alterando, podemos permitir que o agendamento selecionado não entre em conflito com ele mesmo
+        if (ehAlteracao && agendamentoSelecionado != null) {
+            agendamentosDoFuncionario.remove(agendamentoSelecionado);
+        }
 
-            if (agendamento.getFuncionario().equals(funcionario) && agendamento.getData().equals(data)) {
-                LocalTime agendamentoInicio = agendamento.getHoraInicio();
-                LocalTime agendamentoFim = agendamento.getHoraFim();
+        // Verifica se o horário solicitado entra em conflito com os agendamentos existentes do funcionário
+        LocalTime fimHoraInicio = horaInicio.plusMinutes(duracaoServico);
+        for (Agendamento agendamento : agendamentosDoFuncionario) {
+            LocalTime inicioAgendamento = agendamento.getHoraInicio();
+            LocalTime fimAgendamento = inicioAgendamento.plusMinutes(agendamento.getServico().getDuracao());
 
-                // Conflito de horário
-                if (horaInicio.isBefore(agendamentoFim) && horaFim.isAfter(agendamentoInicio)) {
-                    // Permite horário original durante alterações
-                    if (ehAlteracao && horaInicio.equals(agendamentoIgnorado.getHoraInicio())) {
-                        continue;
-                    }
-                    return false;
-                }
+            // Verifica se há conflito de horários
+            if ((horaInicio.isBefore(fimAgendamento) && fimHoraInicio.isAfter(inicioAgendamento))) {
+                return false; // Conflito de horários
             }
         }
-        return true;
+
+        return true; // Horário disponível
     }
 
     // Método para obter todos os agendamentos de um funcionário em uma data específica
