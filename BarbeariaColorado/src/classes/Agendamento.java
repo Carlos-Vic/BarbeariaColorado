@@ -86,30 +86,28 @@ public class Agendamento {
     }
 
     public static boolean verificarDisponibilidade(Funcionario funcionario, LocalDate data, LocalTime horaInicio, int duracao, Agendamento agendamentoIgnorado, boolean ehAlteracao) {
-        LocalTime horaFim = horaInicio.plusMinutes(duracao); // Calcular o horário de fim do novo agendamento
+        LocalTime horaFim = horaInicio.plusMinutes(duracao);
 
-        // Verificar todos os agendamentos para o mesmo funcionário na mesma data
         for (Agendamento agendamento : agendamentos) {
-            // Ignora o agendamento especificado (por exemplo, o agendamento que está sendo alterado)
             if (agendamentoIgnorado != null && agendamento.equals(agendamentoIgnorado)) {
                 continue;
             }
 
             if (agendamento.getFuncionario().equals(funcionario) && agendamento.getData().equals(data)) {
                 LocalTime agendamentoInicio = agendamento.getHoraInicio();
-                LocalTime agendamentoFim = agendamento.getHoraFim(); // Hora de fim do agendamento existente
+                LocalTime agendamentoFim = agendamento.getHoraFim();
 
-                // Verificar se os horários se sobrepõem
+                // Conflito de horário
                 if (horaInicio.isBefore(agendamentoFim) && horaFim.isAfter(agendamentoInicio)) {
-                    // Se for uma alteração, permite que o horário original seja mantido
+                    // Permite horário original durante alterações
                     if (ehAlteracao && horaInicio.equals(agendamentoIgnorado.getHoraInicio())) {
-                        continue; // Ignora o conflito para o horário original durante a alteração
+                        continue;
                     }
-                    return false; // Conflito de horário
+                    return false;
                 }
             }
         }
-        return true; // Horário disponível
+        return true;
     }
 
     // Método para obter todos os agendamentos de um funcionário em uma data específica
