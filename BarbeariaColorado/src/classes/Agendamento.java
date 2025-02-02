@@ -27,7 +27,7 @@ public class Agendamento {
         this.horaFim = horaInicio.plusMinutes(servico.getDuracao()); // Calcula a hora de fim
     }
 
-    // Getters
+    // Getters e setters
     public Cliente getCliente() {
         return cliente;
     }
@@ -80,14 +80,24 @@ public class Agendamento {
         Agendamento.agendamentos = agendamentos;
     }
 
-    // Método para adicionar um agendamento à lista
-    public static void adicionarAgendamento(Agendamento agendamento) {
-        agendamentos.add(agendamento);
+    // Método para verificar a disponibilidade do cliente no mesmo dia e horário
+    public static boolean verificarDisponibilidadeCliente(Cliente cliente, LocalDate data, LocalTime horaInicio, Agendamento agendamentoAtual) {
+        for (Agendamento agendamento : Agendamento.getAgendamentos()) {
+            // Ignora o agendamento atual ao verificar disponibilidade
+            if (agendamento != agendamentoAtual
+                    && agendamento.getCliente().equals(cliente)
+                    && agendamento.getData().equals(data)
+                    && agendamento.getHoraInicio().equals(horaInicio)) {
+                return false;
+            }
+        }
+        return true;
     }
 
+    // Método para verificar a disponibilidade do funcionario nessa data
     public static boolean verificarDisponibilidade(Funcionario funcionario, LocalDate data, LocalTime horaInicio, int duracaoServico, Agendamento agendamentoSelecionado, boolean ehAlteracao) {
         // Filtra os agendamentos para o funcionário e data específicos
-        List<Agendamento> agendamentosDoFuncionario = getAgendamentosPorFuncionarioEData(funcionario, data); // Usando o método correto
+        List<Agendamento> agendamentosDoFuncionario = getAgendamentosPorFuncionarioEData(funcionario, data);
 
         // Se estamos alterando, podemos permitir que o agendamento selecionado não entre em conflito com ele mesmo
         if (ehAlteracao && agendamentoSelecionado != null) {

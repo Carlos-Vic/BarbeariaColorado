@@ -5,6 +5,7 @@ import classes.Funcionario;
 import classes.Servico;
 import classes.Agendamento;
 import static classes.Agendamento.verificarDisponibilidade;
+import static classes.Agendamento.verificarDisponibilidadeCliente;
 import java.awt.Font;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -87,31 +88,37 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     // Método para carregar a tabela na interface
     public void carregarTabelaAgendamentos() {
-        // Ordena a lista de agendamentos com base no horário de início
-        List<Agendamento> agendamentosOrdenados = new ArrayList<>(Agendamentos); // Cria uma cópia da lista
-        agendamentosOrdenados.sort(Comparator.comparing(Agendamento::getHoraInicio)); // Ordena pela hora de início
+        // Ordena a lista de agendamentos por data e depois por horário de início
+        List<Agendamento> agendamentosOrdenados = new ArrayList<>(Agendamentos);
+        agendamentosOrdenados.sort(
+                Comparator.comparing(Agendamento::getData)
+                        .thenComparing(Agendamento::getHoraInicio)
+        );
 
         // Cria o modelo da tabela
-        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Cliente", "Funcionario", "Serviço", "Data", "Horário"}, 0);
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Cliente", "Funcionário", "Serviço", "Data", "Horário"}, 0);
 
         // Preenche a tabela com os agendamentos ordenados
         for (Agendamento agendamento : agendamentosOrdenados) {
-            Object linha[] = new Object[]{
-                agendamento.getCliente(),
-                agendamento.getFuncionario(),
-                agendamento.getServico(),
+            Object[] linha = new Object[]{
+                agendamento.getCliente().getNome(),
+                agendamento.getFuncionario().getNome(),
+                agendamento.getServico().getNome(),
                 agendamento.getData().format(formatter),
-                agendamento.getHoraInicio()};
+                agendamento.getHoraInicio()
+            };
             modelo.addRow(linha);
         }
 
         tabelaAgendamento.setModel(modelo);
     }
 
-    // Método para carregar a tabela filtrada de acordo com a pesquisa
     private void carregarTabelaModoPesquisa(List<Agendamento> agendamentos) {
-        // Ordena a lista de agendamentos filtrados por hora de início
-        agendamentos.sort(Comparator.comparing(Agendamento::getHoraInicio)); // Ordena pela hora de início
+        // Ordena a lista de agendamentos filtrados por data e depois por horário
+        agendamentos.sort(
+                Comparator.comparing(Agendamento::getData)
+                        .thenComparing(Agendamento::getHoraInicio)
+        );
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaAgendamento.getModel();
         modelo.setRowCount(0); // Limpa a tabela antes de adicionar os novos dados
@@ -119,11 +126,11 @@ public class CadastroAgendamento extends javax.swing.JFrame {
         // Preenche a tabela com os agendamentos ordenados
         for (Agendamento agendamento : agendamentos) {
             modelo.addRow(new Object[]{
-                agendamento.getCliente().getNome(), // Nome do Cliente
-                agendamento.getFuncionario().getNome(), // Nome do Funcionário
-                agendamento.getServico().getNome(), // Nome do Serviço
-                agendamento.getData().format(formatter), // Data formatada
-                agendamento.getHoraInicio() // Hora de início
+                agendamento.getCliente().getNome(),
+                agendamento.getFuncionario().getNome(),
+                agendamento.getServico().getNome(),
+                agendamento.getData().format(formatter),
+                agendamento.getHoraInicio()
             });
         }
     }
@@ -203,21 +210,32 @@ public class CadastroAgendamento extends javax.swing.JFrame {
 
     // Método que obtem o agendamento selecionado 
     private Agendamento obterAgendamentoSelecionado() {
-        // Obtém o índice da linha selecionada na tabela de agendamentos
         int index = tabelaAgendamento.getSelectedRow();
 
-        // Verifica se o índice selecionado é válido (maior ou igual a 0 e menor que o número total de linhas)
+        // Verifica se há uma linha válida selecionada
         if (index >= 0) {
-            // Se a lista filtrada não estiver vazia, usamos a lista filtrada
+            String nomeCliente = (String) tabelaAgendamento.getValueAt(index, 0);
+            String nomeFuncionario = (String) tabelaAgendamento.getValueAt(index, 1);
+            String nomeServico = (String) tabelaAgendamento.getValueAt(index, 2);
+            String dataAgendamentoStr = (String) tabelaAgendamento.getValueAt(index, 3);
+            LocalDate dataAgendamento = LocalDate.parse(dataAgendamentoStr, formatter);
+            LocalTime horaAgendamento = (LocalTime) tabelaAgendamento.getValueAt(index, 4);
+
+            // Procura o agendamento correspondente na lista
             List<Agendamento> listaDeAgendamentos = agendamentosFiltrados.isEmpty() ? Agendamentos : agendamentosFiltrados;
 
-            // Verifica se o índice é válido para a lista escolhida
-            if (index < listaDeAgendamentos.size()) {
-                Agendamento agendamentoSelecionado = listaDeAgendamentos.get(index);
-                return agendamentoSelecionado;
+            for (Agendamento agendamento : listaDeAgendamentos) {
+                if (agendamento.getCliente().getNome().equals(nomeCliente)
+                        && agendamento.getFuncionario().getNome().equals(nomeFuncionario)
+                        && agendamento.getServico().getNome().equals(nomeServico)
+                        && agendamento.getData().equals(dataAgendamento)
+                        && agendamento.getHoraInicio().equals(horaAgendamento)) {
+
+                    return agendamento;
+                }
             }
         }
-        return null; // Se não houver agendamento selecionado ou índice inválido
+        return null; // Caso não encontre ou índice inválido
     }
 
     // Método que obtém os agendamentos para um funcionário específico em uma data determinada
@@ -598,25 +616,22 @@ public class CadastroAgendamento extends javax.swing.JFrame {
             Agendamento agendamentoSelecionado = obterAgendamentoSelecionado();
             boolean ehAlteracao = botao.equals("alterar");
 
-            // Verifica conflitos de horário
-            if (ehAlteracao) {
-                // Se for alteração, verifica se o horário está disponível para o funcionário
-                if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), agendamentoSelecionado, true)) {
-                    JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } else {
-                // Se não for alteração, verifica se o horário está disponível para o funcionário
-                if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), null, false)) {
-                    JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+            // Verifica se o cliente já tem agendamento nesse horário, ignorando o atual em caso de alteração
+            if (!verificarDisponibilidadeCliente(cliente, data, horaInicio, agendamentoSelecionado)) {
+                JOptionPane.showMessageDialog(null, "O cliente " + cliente.getNome() + " já tem um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Verifica conflitos de horário do funcionário
+            if (!verificarDisponibilidade(funcionario, data, horaInicio, servico.getDuracao(), agendamentoSelecionado, ehAlteracao)) {
+                JOptionPane.showMessageDialog(null, "Conflito de horário! O funcionário já possui um agendamento neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
             // Confirmação do agendamento
             int confirmacao = JOptionPane.showConfirmDialog(
                     null,
-                    "Tem certeza de que deseja salvar este agendamento?",
+                    "Tem certeza de que deseja agendar esse horário?",
                     "Confirmação",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE
@@ -626,8 +641,8 @@ public class CadastroAgendamento extends javax.swing.JFrame {
                 if (botao.equals("novo")) {
                     // Cria um novo agendamento
                     Agendamento novoAgendamento = new Agendamento(cliente, funcionario, servico, data, horaInicio);
-                    Agendamentos.add(novoAgendamento);
-                    JOptionPane.showMessageDialog(null, "Agendamento cadastrado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                    Agendamento.getAgendamentos().add(novoAgendamento);
+                    JOptionPane.showMessageDialog(null, "Horário marcado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
                 } else if (ehAlteracao) {
                     // Atualiza os dados do agendamento
                     agendamentoSelecionado.setCliente(cliente);
@@ -636,7 +651,7 @@ public class CadastroAgendamento extends javax.swing.JFrame {
                     agendamentoSelecionado.setData(data);
                     agendamentoSelecionado.setHoraInicio(horaInicio);
 
-                    JOptionPane.showMessageDialog(null, "Agendamento alterado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Horário alterado com sucesso!", "Mensagem", JOptionPane.PLAIN_MESSAGE);
                 }
             }
 
