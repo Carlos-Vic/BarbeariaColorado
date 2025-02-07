@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -14,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 public class CadastroCliente extends javax.swing.JFrame {
 
     static ArrayList<Cliente> Clientes = new ArrayList<>();
-
+    private JFrame telaAnterior;
     String botao;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private boolean buscaDinamicaAtiva = false; // Controla se a busca dinâmica está ativa
@@ -25,7 +26,8 @@ public class CadastroCliente extends javax.swing.JFrame {
     /**
      * Creates new form CadastroCliente
      */
-    public CadastroCliente() {
+    public CadastroCliente(JFrame telaAnterior) {
+        this.telaAnterior = telaAnterior;
         initComponents();
 
         // Setando a fonte para os campos e para a tabela
@@ -407,6 +409,7 @@ public class CadastroCliente extends javax.swing.JFrame {
 
     private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
         this.setVisible(false);
+        telaAnterior.setVisible(true);
     }//GEN-LAST:event_botaoVoltarActionPerformed
 
     private void botaoNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoNovoActionPerformed
@@ -598,7 +601,7 @@ public class CadastroCliente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroCliente().setVisible(true);
+                new CadastroCliente(null).setVisible(true);
             }
         });
     }

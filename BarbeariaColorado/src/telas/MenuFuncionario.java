@@ -86,8 +86,8 @@ public class MenuFuncionario extends javax.swing.JFrame {
 
     private void botaoCadastrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarClienteActionPerformed
         // TODO add your handling code here:
-        new CadastroCliente().setVisible(true);
-        this.dispose();
+        new CadastroCliente(this).setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_botaoCadastrarClienteActionPerformed
 
     private void botaoFazerAgendamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFazerAgendamentoActionPerformed
