@@ -33,11 +33,14 @@ public class MenuFuncionario extends javax.swing.JFrame {
         menuFuncionario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         botaoDesconectar.setBorder(null);
         botaoDesconectar.setBorderPainted(false);
         botaoDesconectar.setContentAreaFilled(false);
+        botaoDesconectar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoDesconectar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoDesconectarActionPerformed(evt);
@@ -47,6 +50,7 @@ public class MenuFuncionario extends javax.swing.JFrame {
 
         botaoCadastrarCliente.setBorder(null);
         botaoCadastrarCliente.setContentAreaFilled(false);
+        botaoCadastrarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoCadastrarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoCadastrarClienteActionPerformed(evt);
@@ -56,6 +60,7 @@ public class MenuFuncionario extends javax.swing.JFrame {
 
         botaoFazerAgendamento.setBorder(null);
         botaoFazerAgendamento.setContentAreaFilled(false);
+        botaoFazerAgendamento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoFazerAgendamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoFazerAgendamentoActionPerformed(evt);
@@ -66,6 +71,7 @@ public class MenuFuncionario extends javax.swing.JFrame {
         botaoFinalizarAtendimento.setBorder(null);
         botaoFinalizarAtendimento.setBorderPainted(false);
         botaoFinalizarAtendimento.setContentAreaFilled(false);
+        botaoFinalizarAtendimento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoFinalizarAtendimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoFinalizarAtendimentoActionPerformed(evt);
@@ -76,7 +82,8 @@ public class MenuFuncionario extends javax.swing.JFrame {
         menuFuncionario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_funcionario.png"))); // NOI18N
         getContentPane().add(menuFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        pack();
+        setSize(new java.awt.Dimension(700, 489));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDesconectarActionPerformed
