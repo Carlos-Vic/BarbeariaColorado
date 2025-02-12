@@ -2,14 +2,15 @@ package telas;
 
 import classes.Funcionario;
 import classes.Gerente;
+import javax.swing.JOptionPane;
 import telas.MenuFuncionario;
-
 
 /**
  *
  * @author ARTHUR HENRIQUE
  */
 public class TelaLogin extends javax.swing.JFrame {
+
     public static String senhaGerente = "admin";
     public static String cpfGerente = "01234567890";
     public static String nome = "";
@@ -17,10 +18,9 @@ public class TelaLogin extends javax.swing.JFrame {
     public static String celular = "40028922";
     public static String endereco = "unb";
     public static Gerente gerente = new Gerente(nome, cpfGerente, email, endereco, celular, senhaGerente);
-       
-    
-    public boolean verificarCpf(String CPF){
-        for (Funcionario funcionario: CadastroFuncionario.Funcionarios) {
+
+    public boolean verificarCpf(String CPF) {
+        for (Funcionario funcionario : CadastroFuncionario.Funcionarios) {
             if (funcionario.getCPF().equals(CPF)) {
                 return true;
             }
@@ -28,7 +28,6 @@ public class TelaLogin extends javax.swing.JFrame {
         return false;
     }
 
-    
     public TelaLogin() {
         initComponents();
     }
@@ -96,8 +95,11 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSairActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
+        int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente sair?", "Confirmação", JOptionPane.YES_NO_OPTION);
+
+        if (resposta == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }//GEN-LAST:event_botaoSairActionPerformed
 
     private void botaoAcessarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAcessarActionPerformed
@@ -111,7 +113,7 @@ public class TelaLogin extends javax.swing.JFrame {
             this.dispose();
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "CPF ou senha incorretos. Por favor, tente novamente.");
-        }                        
+        }
     }//GEN-LAST:event_botaoAcessarActionPerformed
 
     /**
