@@ -32,6 +32,8 @@ public class MenuGerente extends javax.swing.JFrame {
         jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         botaoCadastrarProduto.setBorder(null);
@@ -78,7 +80,8 @@ public class MenuGerente extends javax.swing.JFrame {
         menuGerente.setText("jLabel1");
         getContentPane().add(menuGerente, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 689, 475));
 
-        pack();
+        setSize(new java.awt.Dimension(693, 475));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDesconectarActionPerformed

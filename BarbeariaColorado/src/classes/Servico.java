@@ -1,10 +1,11 @@
 package classes;
 
 public enum Servico {
-    CORTE_SOCIAL("Corte Social", 50, 30),
-    CORTE_DEGRADE("Corte Degradê", 40, 30),
-    BARBA("Barba", 30, 30),
-    SOBRANCELHA("Sobrancelha", 20, 30),
+    CORTE_SOCIAL("Corte Social", 40, 30),
+    CORTE_DEGRADE("Corte Degradê", 45, 30),
+    BARBA("Barba", 25, 30),
+    BARBA_CORTESOCIAL("Barba +  Corte Social", 65, 30),
+    BARBA_CORTEDEGRADE("Barba +  Corte Degradê", 70, 30),
     PINTAR_CABELO("Pintar Cabelo", 100, 30),
     HIDRATACAO("Hidratação", 40, 30);
 

@@ -49,11 +49,13 @@ public class TelaLogin extends javax.swing.JFrame {
         telaLogin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         campoCpf.setBackground(new java.awt.Color(0, 173, 181));
-        campoCpf.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        campoCpf.setForeground(new java.awt.Color(255, 255, 255));
+        campoCpf.setFont(new java.awt.Font("JetBrains Mono", 0, 14)); // NOI18N
+        campoCpf.setForeground(new java.awt.Color(238, 238, 238));
         campoCpf.setBorder(null);
         campoCpf.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 280, 30));
@@ -78,6 +80,7 @@ public class TelaLogin extends javax.swing.JFrame {
         botaoSair.setBorder(null);
         botaoSair.setBorderPainted(false);
         botaoSair.setContentAreaFilled(false);
+        botaoSair.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botaoSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoSairActionPerformed(evt);
@@ -88,7 +91,8 @@ public class TelaLogin extends javax.swing.JFrame {
         telaLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/tela_login.png"))); // NOI18N
         getContentPane().add(telaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 687, 467));
 
-        pack();
+        setSize(new java.awt.Dimension(688, 467));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSairActionPerformed
