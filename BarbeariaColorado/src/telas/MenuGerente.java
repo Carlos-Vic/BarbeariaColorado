@@ -23,9 +23,7 @@ public class MenuGerente extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        botaoCadastrarGerente = new javax.swing.JButton();
         botaoCadastrarProduto = new javax.swing.JButton();
-        botaoCadastrarServico = new javax.swing.JButton();
         botaoCadastrarFuncionario = new javax.swing.JButton();
         botaoCadastrarCliente = new javax.swing.JButton();
         botaoDesconectar = new javax.swing.JButton();
@@ -36,16 +34,6 @@ public class MenuGerente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        botaoCadastrarGerente.setBorder(null);
-        botaoCadastrarGerente.setContentAreaFilled(false);
-        botaoCadastrarGerente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        botaoCadastrarGerente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoCadastrarGerenteActionPerformed(evt);
-            }
-        });
-        getContentPane().add(botaoCadastrarGerente, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 300, 30));
-
         botaoCadastrarProduto.setBorder(null);
         botaoCadastrarProduto.setContentAreaFilled(false);
         botaoCadastrarProduto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -54,12 +42,7 @@ public class MenuGerente extends javax.swing.JFrame {
                 botaoCadastrarProdutoActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoCadastrarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 203, 290, 40));
-
-        botaoCadastrarServico.setBorder(null);
-        botaoCadastrarServico.setContentAreaFilled(false);
-        botaoCadastrarServico.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        getContentPane().add(botaoCadastrarServico, new org.netbeans.lib.awtextra.AbsoluteConstraints(385, 203, 280, 40));
+        getContentPane().add(botaoCadastrarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 290, 40));
 
         botaoCadastrarFuncionario.setBorder(null);
         botaoCadastrarFuncionario.setContentAreaFilled(false);
@@ -69,7 +52,7 @@ public class MenuGerente extends javax.swing.JFrame {
                 botaoCadastrarFuncionarioActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoCadastrarFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 123, 290, 40));
+        getContentPane().add(botaoCadastrarFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 170, 290, 40));
 
         botaoCadastrarCliente.setBorder(null);
         botaoCadastrarCliente.setContentAreaFilled(false);
@@ -79,7 +62,7 @@ public class MenuGerente extends javax.swing.JFrame {
                 botaoCadastrarClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(botaoCadastrarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 303, 290, 40));
+        getContentPane().add(botaoCadastrarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, 290, 40));
 
         botaoDesconectar.setBorder(null);
         botaoDesconectar.setContentAreaFilled(false);
@@ -97,10 +80,6 @@ public class MenuGerente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void botaoCadastrarGerenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarGerenteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botaoCadastrarGerenteActionPerformed
 
     private void botaoDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDesconectarActionPerformed
         // TODO add your handling code here:
@@ -164,9 +143,7 @@ public class MenuGerente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrarCliente;
     private javax.swing.JButton botaoCadastrarFuncionario;
-    private javax.swing.JButton botaoCadastrarGerente;
     private javax.swing.JButton botaoCadastrarProduto;
-    private javax.swing.JButton botaoCadastrarServico;
     private javax.swing.JButton botaoDesconectar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel menuGerente;
