@@ -80,15 +80,15 @@ public class MenuFuncionario extends javax.swing.JFrame {
         getContentPane().add(botaoFinalizarAtendimento, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, 300, 30));
 
         menuFuncionario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_funcionario.png"))); // NOI18N
-        getContentPane().add(menuFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(menuFuncionario, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 490));
 
         setSize(new java.awt.Dimension(700, 489));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDesconectarActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
+        new TelaLogin().setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_botaoDesconectarActionPerformed
 
     private void botaoCadastrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarClienteActionPerformed

@@ -12,7 +12,7 @@ import telas.MenuFuncionario;
 public class TelaLogin extends javax.swing.JFrame {
 
     public static String senhaGerente = "admin";
-    public static String cpfGerente = "01234567890";
+    public static String cpfGerente = "00000000000";
     public static String nome = "";
     public static String email = "email@email.com";
     public static String celular = "40028922";
@@ -41,7 +41,7 @@ public class TelaLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        campoCpf = new javax.swing.JTextField();
+        campoCpf = new javax.swing.JFormattedTextField();
         campoSenha = new javax.swing.JPasswordField();
         botaoAcessar = new javax.swing.JButton();
         botaoSair = new javax.swing.JButton();
@@ -53,14 +53,17 @@ public class TelaLogin extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         campoCpf.setBackground(new java.awt.Color(0, 173, 181));
-        campoCpf.setFont(new java.awt.Font("JetBrains Mono", 0, 14)); // NOI18N
-        campoCpf.setForeground(new java.awt.Color(238, 238, 238));
         campoCpf.setBorder(null);
-        campoCpf.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 280, 30));
+        campoCpf.setForeground(new java.awt.Color(238, 238, 238));
+        try {
+            campoCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###########")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        getContentPane().add(campoCpf, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 290, 30));
 
         campoSenha.setBackground(new java.awt.Color(0, 173, 181));
-        campoSenha.setForeground(new java.awt.Color(255, 255, 255));
+        campoSenha.setForeground(new java.awt.Color(238, 238, 238));
         campoSenha.setBorder(null);
         getContentPane().add(campoSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 290, 30));
 
@@ -154,7 +157,7 @@ public class TelaLogin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoAcessar;
     private javax.swing.JButton botaoSair;
-    private javax.swing.JTextField campoCpf;
+    private javax.swing.JFormattedTextField campoCpf;
     private javax.swing.JPasswordField campoSenha;
     private javax.swing.JLabel telaLogin;
     // End of variables declaration//GEN-END:variables

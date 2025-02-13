@@ -78,7 +78,7 @@ public class MenuGerente extends javax.swing.JFrame {
 
         menuGerente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/menu_gerente.png"))); // NOI18N
         menuGerente.setText("jLabel1");
-        getContentPane().add(menuGerente, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 689, 475));
+        getContentPane().add(menuGerente, new org.netbeans.lib.awtextra.AbsoluteConstraints(-5, 0, 700, 475));
 
         setSize(new java.awt.Dimension(693, 475));
         setLocationRelativeTo(null);
